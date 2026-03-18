@@ -15,11 +15,11 @@ export function BetCard({ bet, currentUserId }: BetCardProps) {
 
   const statusLabel =
     bet.status === 'answered'
-      ? 'Aufgeloest'
+      ? 'Aufgelöst'
       : isSubject
       ? 'Deine Antwort gefragt'
       : myParticipation?.side === null
-      ? 'Seite waehlen'
+      ? 'Seite wählen'
       : 'Offen'
 
   const statusVariant =

@@ -53,7 +53,7 @@ export async function createBet(input: CreateBetInput) {
     user_id: input.subjectId,
     type: 'bet_request',
     title: 'Neue Wette!',
-    body: `${name} hat eine Wette ueber dich gestellt: "${input.question}"`,
+    body: `${name} hat eine Wette über dich gestellt: "${input.question}"`,
     ref_id: bet.id,
   })
 
@@ -169,7 +169,7 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
     allUserIds.map((uid) => ({
       user_id: uid,
       type: 'bet_result' as const,
-      title: 'Wette aufgeloest!',
+      title: 'Wette aufgelöst!',
       body: `${subjectName} hat mit "${answer ? 'Ja' : 'Nein'}" geantwortet.`,
       ref_id: betId,
     }))

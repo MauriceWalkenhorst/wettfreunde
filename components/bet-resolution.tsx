@@ -114,7 +114,7 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
               onClick={() => fileRef.current?.click()}
               className="w-full rounded-xl border-2 border-dashed border-zinc-300 py-6 text-sm text-zinc-500 hover:border-zinc-400 transition-colors text-center"
             >
-              Foto aufnehmen oder auswaehlen
+              Foto aufnehmen oder auswählen
             </button>
           )}
         </div>
@@ -122,7 +122,7 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
         {error && <p className="text-sm text-red-500">{error}</p>}
 
         <Button onClick={handleAnswer} disabled={selectedAnswer === null} loading={loading} className="w-full">
-          Antwort bestaetigen
+          Antwort bestätigen
         </Button>
       </div>
     )
@@ -131,7 +131,7 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
   if (myParticipation && myParticipation.side === null) {
     return (
       <div className="space-y-4 bg-blue-50 border border-blue-200 rounded-2xl p-5">
-        <p className="font-medium text-zinc-900">Waehle deine Seite!</p>
+        <p className="font-medium text-zinc-900">Wähle deine Seite!</p>
 
         <div className="grid grid-cols-2 gap-3">
           <button
@@ -161,7 +161,7 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
         {error && <p className="text-sm text-red-500">{error}</p>}
 
         <Button onClick={handlePickSide} disabled={selectedSide === null} loading={loading} className="w-full">
-          Seite bestaetigen
+          Seite bestätigen
         </Button>
       </div>
     )

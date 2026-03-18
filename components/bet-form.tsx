@@ -129,7 +129,7 @@ export function BetForm({ friends, currentUser }: BetFormProps) {
       {step === 'participants' && (
         <div className="space-y-4">
           <div>
-            <h2 className="text-xl font-bold text-zinc-900">Wetter auswaehlen</h2>
+            <h2 className="text-xl font-bold text-zinc-900">Wetter auswählen</h2>
             <p className="text-sm text-zinc-500 mt-1">Wer nimmt an der Wette teil? (mind. 2)</p>
           </div>
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-zinc-900 bg-zinc-50">
@@ -201,7 +201,7 @@ export function BetForm({ friends, currentUser }: BetFormProps) {
             onClick={() => setStep(steps[stepIndex - 1])}
             className="flex-1"
           >
-            Zurueck
+            Zurück
           </Button>
         )}
         {step !== 'side' ? (

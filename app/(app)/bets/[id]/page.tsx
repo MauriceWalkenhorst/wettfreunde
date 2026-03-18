@@ -33,7 +33,7 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
     <div className="space-y-6 max-w-2xl mx-auto">
       <div>
         <Link href="/dashboard" className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors">
-          Zurueck zum Feed
+          Zurück zum Feed
         </Link>
       </div>
 
@@ -50,7 +50,7 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
               bet.status === 'answered' ? 'success' : bet.status === 'expired' ? 'danger' : 'warning'
             }
           >
-            {bet.status === 'answered' ? 'Aufgeloest' : bet.status === 'expired' ? 'Abgelaufen' : 'Offen'}
+            {bet.status === 'answered' ? 'Aufgelöst' : bet.status === 'expired' ? 'Abgelaufen' : 'Offen'}
           </Badge>
         </div>
 

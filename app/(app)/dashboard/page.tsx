@@ -24,7 +24,7 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900">Feed</h1>
-          <p className="text-sm text-zinc-500 mt-0.5">Deine Wetten im Ueberblick</p>
+          <p className="text-sm text-zinc-500 mt-0.5">Deine Wetten im Überblick</p>
         </div>
         <div className="flex items-center gap-2">
           <NotificationBell notifications={notifications} />

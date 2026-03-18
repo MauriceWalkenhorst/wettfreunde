@@ -33,7 +33,7 @@ export function ShareInvite() {
     <div className="bg-zinc-50 rounded-2xl border border-zinc-200 p-5 space-y-3">
       <div>
         <h3 className="font-semibold text-zinc-900">Freunde einladen</h3>
-        <p className="text-sm text-zinc-500 mt-0.5">Teile einen persoenlichen Einladungslink.</p>
+        <p className="text-sm text-zinc-500 mt-0.5">Teile einen persönlichen Einladungslink.</p>
       </div>
 
       {link ? (
