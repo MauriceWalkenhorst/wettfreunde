@@ -70,7 +70,7 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
       : step === 'subject'
       ? subjectId !== null
       : step === 'participants'
-      ? participantIds.length >= 2
+      ? participantIds.length >= 1
       : creatorSide !== null
 
   // All users except current user
@@ -153,7 +153,7 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
         <div className="space-y-4">
           <div>
             <h2 className="text-xl font-bold text-zinc-900">Teilnehmer auswählen</h2>
-            <p className="text-sm text-zinc-500 mt-1">Wer wettet mit? (mind. 1 weiterer)</p>
+            <p className="text-sm text-zinc-500 mt-1">Wer wettet noch mit? (optional)</p>
           </div>
 
           {/* Creator (always selected) */}
