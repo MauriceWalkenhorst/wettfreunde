@@ -1,18 +1,20 @@
 import { createClient } from '@/lib/supabase/server'
-import { getFriends } from '@/lib/queries/friends'
+import { getAllUsers } from '@/lib/queries/friends'
 import { BetForm } from '@/components/bet-form'
 import Link from 'next/link'
+import { Profile } from '@/lib/supabase/types'
 
 export default async function NewBetPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const [friends, { data: profileData }] = await Promise.all([
-    getFriends(),
+  const [allUsers, profileResult] = await Promise.all([
+    getAllUsers(),
     supabase.from('profiles').select('*').eq('id', user.id).single(),
   ])
 
+  const profileData = profileResult.data as Profile | null
   if (!profileData) return null
 
   return (
@@ -23,7 +25,7 @@ export default async function NewBetPage() {
         </Link>
         <h1 className="text-2xl font-bold text-zinc-900 mt-2">Neue Wette</h1>
       </div>
-      <BetForm friends={[profileData, ...friends]} currentUser={profileData} />
+      <BetForm allUsers={allUsers} currentUser={profileData} />
     </div>
   )
 }

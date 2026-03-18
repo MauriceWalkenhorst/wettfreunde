@@ -11,13 +11,13 @@ import { Avatar } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 
 interface BetFormProps {
-  friends: Profile[]
+  allUsers: Profile[]
   currentUser: Profile
 }
 
 type Step = 'details' | 'subject' | 'participants' | 'side'
 
-export function BetForm({ friends, currentUser }: BetFormProps) {
+export function BetForm({ allUsers, currentUser }: BetFormProps) {
   const router = useRouter()
   const [step, setStep] = useState<Step>('details')
   const [loading, setLoading] = useState(false)
@@ -33,7 +33,7 @@ export function BetForm({ friends, currentUser }: BetFormProps) {
   const stepIndex = steps.indexOf(step)
 
   function toggleParticipant(id: string) {
-    if (id === currentUser.id) return // Creator always in
+    if (id === currentUser.id) return
     setParticipantIds((prev) =>
       prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
     )
@@ -41,6 +41,8 @@ export function BetForm({ friends, currentUser }: BetFormProps) {
 
   function selectSubject(id: string) {
     setSubjectId((prev) => (prev === id ? null : id))
+    // Reset participants when subject changes
+    setParticipantIds([currentUser.id])
   }
 
   async function handleSubmit() {
@@ -71,22 +73,37 @@ export function BetForm({ friends, currentUser }: BetFormProps) {
       ? participantIds.length >= 2
       : creatorSide !== null
 
-  const subjectFriends = friends.filter((f) => f.id !== currentUser.id)
-  const selectedSubject = friends.find((f) => f.id === subjectId)
+  // All users except current user
+  const otherUsers = allUsers.filter((u) => u.id !== currentUser.id)
+  // For participants: exclude the subject (subject can't bet on themselves)
+  const participantCandidates = otherUsers.filter((u) => u.id !== subjectId)
+  const selectedSubject = allUsers.find((u) => u.id === subjectId)
+
+  const stepLabels: Record<Step, string> = {
+    details: 'Die Wette',
+    subject: 'Befragte Person',
+    participants: 'Teilnehmer',
+    side: 'Deine Seite',
+  }
 
   return (
     <div className="max-w-lg mx-auto space-y-6">
       {/* Progress */}
-      <div className="flex gap-1.5">
-        {steps.map((s, i) => (
-          <div
-            key={s}
-            className={cn(
-              'h-1 flex-1 rounded-full transition-colors',
-              i <= stepIndex ? 'bg-zinc-900' : 'bg-zinc-200'
-            )}
-          />
-        ))}
+      <div className="space-y-1">
+        <p className="text-xs text-zinc-500 font-medium">
+          Schritt {stepIndex + 1} von {steps.length} — {stepLabels[step]}
+        </p>
+        <div className="flex gap-1.5">
+          {steps.map((s, i) => (
+            <div
+              key={s}
+              className={cn(
+                'h-1 flex-1 rounded-full transition-colors',
+                i <= stepIndex ? 'bg-zinc-900' : 'bg-zinc-200'
+              )}
+            />
+          ))}
+        </div>
       </div>
 
       {step === 'details' && (
@@ -117,21 +134,29 @@ export function BetForm({ friends, currentUser }: BetFormProps) {
             <h2 className="text-xl font-bold text-zinc-900">Befragte Person</h2>
             <p className="text-sm text-zinc-500 mt-1">Wer muss die Frage beantworten?</p>
           </div>
-          <FriendPicker
-            friends={subjectFriends}
-            selected={subjectId ? [subjectId] : []}
-            onToggle={selectSubject}
-            singleSelect
-          />
+          {otherUsers.length === 0 ? (
+            <div className="text-center py-8 text-sm text-zinc-500">
+              Noch keine anderen Nutzer auf der Plattform.
+            </div>
+          ) : (
+            <FriendPicker
+              friends={otherUsers}
+              selected={subjectId ? [subjectId] : []}
+              onToggle={selectSubject}
+              singleSelect
+            />
+          )}
         </div>
       )}
 
       {step === 'participants' && (
         <div className="space-y-4">
           <div>
-            <h2 className="text-xl font-bold text-zinc-900">Wetter auswählen</h2>
-            <p className="text-sm text-zinc-500 mt-1">Wer nimmt an der Wette teil? (mind. 2)</p>
+            <h2 className="text-xl font-bold text-zinc-900">Teilnehmer auswählen</h2>
+            <p className="text-sm text-zinc-500 mt-1">Wer wettet mit? (mind. 1 weiterer)</p>
           </div>
+
+          {/* Creator (always selected) */}
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-zinc-900 bg-zinc-50">
             <Avatar src={currentUser.avatar_url} name={currentUser.display_name} size="sm" />
             <span className="flex-1 text-sm font-medium text-zinc-900">{currentUser.display_name} (Du)</span>
@@ -141,11 +166,18 @@ export function BetForm({ friends, currentUser }: BetFormProps) {
               </svg>
             </div>
           </div>
-          <FriendPicker
-            friends={subjectFriends.filter((f) => f.id !== subjectId)}
-            selected={participantIds}
-            onToggle={toggleParticipant}
-          />
+
+          {participantCandidates.length === 0 ? (
+            <div className="text-center py-6 text-sm text-zinc-500">
+              Keine weiteren Nutzer verfügbar.
+            </div>
+          ) : (
+            <FriendPicker
+              friends={participantCandidates}
+              selected={participantIds}
+              onToggle={toggleParticipant}
+            />
+          )}
         </div>
       )}
 
@@ -167,9 +199,7 @@ export function BetForm({ friends, currentUser }: BetFormProps) {
               onClick={() => setCreatorSide(true)}
               className={cn(
                 'rounded-2xl border-2 p-6 text-center transition-all',
-                creatorSide === true
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-zinc-200 hover:border-zinc-400'
+                creatorSide === true ? 'border-green-500 bg-green-50' : 'border-zinc-200 hover:border-zinc-400'
               )}
             >
               <div className="text-3xl mb-2">✅</div>
@@ -180,9 +210,7 @@ export function BetForm({ friends, currentUser }: BetFormProps) {
               onClick={() => setCreatorSide(false)}
               className={cn(
                 'rounded-2xl border-2 p-6 text-center transition-all',
-                creatorSide === false
-                  ? 'border-red-500 bg-red-50'
-                  : 'border-zinc-200 hover:border-zinc-400'
+                creatorSide === false ? 'border-red-500 bg-red-50' : 'border-zinc-200 hover:border-zinc-400'
               )}
             >
               <div className="text-3xl mb-2">❌</div>
@@ -196,29 +224,16 @@ export function BetForm({ friends, currentUser }: BetFormProps) {
 
       <div className="flex gap-3">
         {stepIndex > 0 && (
-          <Button
-            variant="secondary"
-            onClick={() => setStep(steps[stepIndex - 1])}
-            className="flex-1"
-          >
+          <Button variant="secondary" onClick={() => setStep(steps[stepIndex - 1])} className="flex-1">
             Zurück
           </Button>
         )}
         {step !== 'side' ? (
-          <Button
-            onClick={() => setStep(steps[stepIndex + 1])}
-            disabled={!canNext}
-            className="flex-1"
-          >
+          <Button onClick={() => setStep(steps[stepIndex + 1])} disabled={!canNext} className="flex-1">
             Weiter
           </Button>
         ) : (
-          <Button
-            onClick={handleSubmit}
-            disabled={!canNext}
-            loading={loading}
-            className="flex-1"
-          >
+          <Button onClick={handleSubmit} disabled={!canNext} loading={loading} className="flex-1">
             Wette erstellen
           </Button>
         )}
