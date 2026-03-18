@@ -29,6 +29,15 @@ export function ShareInvite() {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  async function handleShare() {
+    if (!link) return
+    if (navigator.share) {
+      await navigator.share({ title: 'Wettfreunde', text: 'Tritt meiner Wettfreunde-Gruppe bei!', url: link })
+    } else {
+      handleCopy()
+    }
+  }
+
   return (
     <div className="bg-zinc-50 rounded-2xl border border-zinc-200 p-5 space-y-3">
       <div>
@@ -45,15 +54,20 @@ export function ShareInvite() {
               className="flex-1 text-xs bg-white border border-zinc-200 rounded-xl px-3 py-2 text-zinc-700 focus:outline-none"
             />
             <Button size="sm" onClick={handleCopy} variant="secondary">
-              {copied ? 'Kopiert!' : 'Kopieren'}
+              {copied ? '✓ Kopiert' : 'Kopieren'}
             </Button>
           </div>
-          <Button size="sm" variant="ghost" onClick={handleCreate} loading={loading}>
-            Neuen Link generieren
-          </Button>
+          <div className="flex gap-2">
+            <Button size="sm" variant="primary" onClick={handleShare} className="flex-1">
+              Teilen
+            </Button>
+            <Button size="sm" variant="ghost" onClick={handleCreate} loading={loading}>
+              Neu generieren
+            </Button>
+          </div>
         </div>
       ) : (
-        <Button onClick={handleCreate} loading={loading}>
+        <Button onClick={handleCreate} loading={loading} className="w-full">
           Einladungslink erstellen
         </Button>
       )}

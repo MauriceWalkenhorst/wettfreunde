@@ -9,7 +9,9 @@ export default async function FriendsPage() {
     <div className="space-y-6 max-w-2xl mx-auto">
       <div>
         <h1 className="text-2xl font-bold text-zinc-900">Freunde</h1>
-        <p className="text-sm text-zinc-500 mt-0.5">{friends.length} Freunde</p>
+        <p className="text-sm text-zinc-500 mt-0.5">
+          {friends.length === 0 ? 'Noch keine Freunde' : `${friends.length} ${friends.length === 1 ? 'Freund' : 'Freunde'}`}
+        </p>
       </div>
 
       <ShareInvite />
