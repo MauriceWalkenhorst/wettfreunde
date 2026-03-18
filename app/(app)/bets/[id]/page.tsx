@@ -4,9 +4,20 @@ import { notFound } from 'next/navigation'
 import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { BetResolution } from '@/components/bet-resolution'
+import { BetPhotoUpload } from '@/components/bet-photo-upload'
 import { formatRelativeTime } from '@/lib/utils'
 import Link from 'next/link'
 import Image from 'next/image'
+import { Profile } from '@/lib/supabase/types'
+
+type BetPhoto = {
+  id: string
+  photo_path: string
+  caption: string | null
+  created_at: string
+  uploaded_by: string
+  uploader: Profile
+}
 
 export default async function BetDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -19,6 +30,7 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
 
   const isSubject = bet.subject_id === user.id
   const myParticipation = bet.participants.find((p) => p.user_id === user.id) ?? null
+  const isInvolved = isSubject || myParticipation !== null
 
   // Get proof photo URL if exists
   let proofPhotoUrl: string | null = null
@@ -28,6 +40,25 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
       .createSignedUrl(bet.proof_photo_path, 3600)
     proofPhotoUrl = data?.signedUrl ?? null
   }
+
+  // Get bet photos uploaded by participants
+  const { data: betPhotosRaw } = await supabase
+    .from('bet_photos')
+    .select('*, uploader:profiles(*)')
+    .eq('bet_id', id)
+    .order('created_at', { ascending: false })
+
+  const betPhotos = (betPhotosRaw ?? []) as unknown as BetPhoto[]
+
+  // Get signed URLs for all bet photos
+  const betPhotoUrls = await Promise.all(
+    betPhotos.map(async (p) => {
+      const { data } = await supabase.storage
+        .from('proof-photos')
+        .createSignedUrl(p.photo_path, 3600)
+      return { ...p, url: data?.signedUrl ?? null }
+    })
+  )
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
@@ -45,11 +76,7 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
             <h1 className="text-xl font-bold text-zinc-900 leading-snug">{bet.question}</h1>
             <p className="text-sm text-zinc-500">Einsatz: <strong>{bet.stake}</strong></p>
           </div>
-          <Badge
-            variant={
-              bet.status === 'answered' ? 'success' : bet.status === 'expired' ? 'danger' : 'warning'
-            }
-          >
+          <Badge variant={bet.status === 'answered' ? 'success' : bet.status === 'expired' ? 'danger' : 'warning'}>
             {bet.status === 'answered' ? 'Aufgelöst' : bet.status === 'expired' ? 'Abgelaufen' : 'Offen'}
           </Badge>
         </div>
@@ -69,10 +96,10 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
           )}
         </div>
 
-        {/* Proof photo */}
+        {/* Subject proof photo */}
         {proofPhotoUrl && (
           <div className="space-y-2">
-            <p className="text-xs text-zinc-500 font-medium uppercase tracking-wide">Foto-Beweis</p>
+            <p className="text-xs text-zinc-500 font-medium uppercase tracking-wide">Beweis vom Befragten</p>
             <Image
               src={proofPhotoUrl}
               alt="Beweis"
@@ -122,6 +149,37 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
           isSubject={isSubject}
           myParticipation={myParticipation}
         />
+      )}
+
+      {/* Participant proof photos */}
+      {betPhotoUrls.length > 0 && (
+        <div className="space-y-3">
+          <p className="text-sm font-semibold text-zinc-700">Beweis-Fotos</p>
+          {betPhotoUrls.map((p) => p.url && (
+            <div key={p.id} className="bg-white rounded-2xl border border-zinc-200 overflow-hidden">
+              <Image
+                src={p.url}
+                alt="Beweis"
+                width={600}
+                height={400}
+                className="w-full object-cover max-h-64"
+              />
+              <div className="px-4 py-3 flex items-center gap-2">
+                <Avatar src={p.uploader.avatar_url} name={p.uploader.display_name} size="sm" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-zinc-900">{p.uploader.display_name}</p>
+                  {p.caption && <p className="text-xs text-zinc-500 truncate">{p.caption}</p>}
+                </div>
+                <span className="text-xs text-zinc-400">{formatRelativeTime(p.created_at)}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Photo upload for participants after bet is answered */}
+      {bet.status === 'answered' && isInvolved && (
+        <BetPhotoUpload betId={bet.id} />
       )}
     </div>
   )

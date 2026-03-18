@@ -150,6 +150,33 @@ export type Database = {
           }
         ]
       }
+      bet_photos: {
+        Row: {
+          id: string
+          bet_id: string
+          uploaded_by: string
+          photo_path: string
+          caption: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          bet_id: string
+          uploaded_by: string
+          photo_path: string
+          caption?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          bet_id?: string
+          uploaded_by?: string
+          photo_path?: string
+          caption?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       bet_participants: {
         Row: {
           id: string

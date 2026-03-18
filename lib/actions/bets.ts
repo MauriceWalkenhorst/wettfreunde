@@ -48,7 +48,6 @@ export async function createBet(input: CreateBetInput) {
 
   const name = (creatorProfile as { display_name: string } | null)?.display_name ?? 'Jemand'
 
-  // Notify subject
   await supabase.from('notifications').insert({
     user_id: input.subjectId,
     type: 'bet_request',
@@ -57,7 +56,6 @@ export async function createBet(input: CreateBetInput) {
     ref_id: bet.id,
   })
 
-  // Notify other participants (not creator, not subject)
   const others = allParticipants.filter((id) => id !== user.id && id !== input.subjectId)
   if (others.length > 0) {
     await supabase.from('notifications').insert(
@@ -109,7 +107,7 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
 
   if (photoFile) {
     const ext = photoFile.name.split('.').pop()
-    const path = `${betId}/${user.id}-${Date.now()}.${ext}`
+    const path = `${betId}/subject-${Date.now()}.${ext}`
     const arrayBuffer = await photoFile.arrayBuffer()
     const { error: uploadError } = await supabase.storage
       .from('proof-photos')
@@ -155,7 +153,6 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
     }
   }
 
-  // Notify all participants
   const { data: subjectProfile } = await supabase
     .from('profiles')
     .select('display_name')
@@ -178,4 +175,31 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
   revalidatePath(`/bets/${betId}`)
   revalidatePath('/dashboard')
   revalidatePath('/leaderboard')
+}
+
+export async function uploadBetPhoto(betId: string, photoFile: File, caption?: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Not authenticated')
+
+  const ext = photoFile.name.split('.').pop()
+  const path = `${betId}/proof-${user.id}-${Date.now()}.${ext}`
+  const arrayBuffer = await photoFile.arrayBuffer()
+
+  const { error: uploadError } = await supabase.storage
+    .from('proof-photos')
+    .upload(path, arrayBuffer, { contentType: photoFile.type })
+
+  if (uploadError) throw new Error(uploadError.message)
+
+  const { error: dbError } = await supabase.from('bet_photos').insert({
+    bet_id: betId,
+    uploaded_by: user.id,
+    photo_path: path,
+    caption: caption ?? null,
+  })
+
+  if (dbError) throw new Error(dbError.message)
+
+  revalidatePath(`/bets/${betId}`)
 }
