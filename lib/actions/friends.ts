@@ -18,12 +18,53 @@ export async function createInviteLink(): Promise<{ token: string }> {
   return { token: data.token }
 }
 
+export async function sendFriendRequest(targetUserId: string): Promise<{ success: boolean; message: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Not authenticated')
+  if (user.id === targetUserId) return { success: false, message: 'Du kannst dir nicht selbst eine Anfrage schicken.' }
+
+  const [userA, userB] = [user.id, targetUserId].sort()
+
+  const { data: existing } = await supabase
+    .from('friendships')
+    .select('id, status')
+    .eq('user_a', userA)
+    .eq('user_b', userB)
+    .single()
+
+  if (existing?.status === 'accepted') return { success: false, message: 'Ihr seid bereits befreundet.' }
+  if (existing?.status === 'pending') return { success: false, message: 'Anfrage bereits gesendet.' }
+
+  const { error } = await supabase
+    .from('friendships')
+    .insert({ user_a: userA, user_b: userB, status: 'accepted' })
+
+  if (error) throw error
+
+  const { data: currentProfile } = await supabase
+    .from('profiles')
+    .select('display_name')
+    .eq('id', user.id)
+    .single()
+
+  await supabase.from('notifications').insert({
+    user_id: targetUserId,
+    type: 'friend_accepted',
+    title: 'Neuer Freund!',
+    body: `${(currentProfile as { display_name: string } | null)?.display_name ?? 'Jemand'} hat dich als Freund hinzugefügt.`,
+    ref_id: user.id,
+  })
+
+  revalidatePath('/friends')
+  return { success: true, message: 'Freund hinzugefügt!' }
+}
+
 export async function acceptInvite(token: string): Promise<{ success: boolean; message: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
-  // Get invite link
   const { data: invite, error: inviteError } = await supabase
     .from('invite_links')
     .select('*')
@@ -35,7 +76,6 @@ export async function acceptInvite(token: string): Promise<{ success: boolean; m
   if (new Date(invite.expires_at) < new Date()) return { success: false, message: 'Dieser Link ist abgelaufen.' }
   if (invite.created_by === user.id) return { success: false, message: 'Du kannst dir nicht selbst eine Freundschaft schicken.' }
 
-  // Check if friendship already exists
   const [userA, userB] = [invite.created_by, user.id].sort()
   const { data: existing } = await supabase
     .from('friendships')
@@ -47,20 +87,13 @@ export async function acceptInvite(token: string): Promise<{ success: boolean; m
   if (existing?.status === 'accepted') return { success: false, message: 'Ihr seid bereits befreundet.' }
 
   if (existing) {
-    // Update to accepted
     await supabase.from('friendships').update({ status: 'accepted' }).eq('id', existing.id)
   } else {
-    // Create friendship
-    const { error: friendError } = await supabase
-      .from('friendships')
-      .insert({ user_a: userA, user_b: userB, status: 'accepted' })
-    if (friendError) throw friendError
+    await supabase.from('friendships').insert({ user_a: userA, user_b: userB, status: 'accepted' })
   }
 
-  // Mark invite as used
   await supabase.from('invite_links').update({ used_by: user.id }).eq('id', invite.id)
 
-  // Create notification for inviter
   const { data: currentProfile } = await supabase
     .from('profiles')
     .select('display_name')
@@ -70,8 +103,8 @@ export async function acceptInvite(token: string): Promise<{ success: boolean; m
   await supabase.from('notifications').insert({
     user_id: invite.created_by,
     type: 'friend_accepted',
-    title: 'Neue Freundschaft!',
-    body: `${currentProfile?.display_name ?? 'Jemand'} hat deine Einladung angenommen.`,
+    title: 'Neuer Freund!',
+    body: `${(currentProfile as { display_name: string } | null)?.display_name ?? 'Jemand'} hat deine Einladung angenommen.`,
     ref_id: user.id,
   })
 
