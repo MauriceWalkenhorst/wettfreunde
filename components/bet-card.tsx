@@ -66,7 +66,7 @@ export function BetCard({ bet, currentUserId }: BetCardProps) {
           <span className="text-sm">
             Antwort: <strong>{bet.subject_answer ? 'Ja' : 'Nein'}</strong>
           </span>
-          {myParticipation?.won !== null && myParticipation?.won !== undefined && (
+          {myParticipation?.won != null && (
             <Badge variant={myParticipation.won ? 'success' : 'danger'}>
               {myParticipation.won ? `+${myParticipation.points_awarded} Punkte` : 'Verloren'}
             </Badge>

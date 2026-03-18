@@ -109,10 +109,11 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
     const ext = photoFile.name.split('.').pop()
     const path = `${betId}/subject-${Date.now()}.${ext}`
     const arrayBuffer = await photoFile.arrayBuffer()
-    const { error: uploadError } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
       .from('proof-photos')
       .upload(path, arrayBuffer, { contentType: photoFile.type })
-    if (!uploadError) proofPhotoPath = path
+    if (uploadError) throw new Error('Foto-Upload fehlgeschlagen: ' + uploadError.message)
+    proofPhotoPath = uploadData.path
   }
 
   await supabase

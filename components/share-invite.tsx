@@ -8,15 +8,17 @@ export function ShareInvite() {
   const [link, setLink] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleCreate() {
     setLoading(true)
+    setError(null)
     try {
       const { token } = await createInviteLink()
       const url = `${window.location.origin}/invite/${token}`
       setLink(url)
     } catch {
-      // ignore
+      setError('Link konnte nicht erstellt werden. Bitte erneut versuchen.')
     } finally {
       setLoading(false)
     }
@@ -67,9 +69,12 @@ export function ShareInvite() {
           </div>
         </div>
       ) : (
-        <Button onClick={handleCreate} loading={loading} className="w-full">
-          Einladungslink erstellen
-        </Button>
+        <>
+          <Button onClick={handleCreate} loading={loading} className="w-full">
+            Einladungslink erstellen
+          </Button>
+          {error && <p className="text-xs text-red-500">{error}</p>}
+        </>
       )}
     </div>
   )
