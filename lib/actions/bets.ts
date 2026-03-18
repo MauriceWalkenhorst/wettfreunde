@@ -139,18 +139,10 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
       .eq('id', p.id)
 
     if (won) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('points')
-        .eq('id', p.user_id)
-        .single()
-
-      if (profile) {
-        await supabase
-          .from('profiles')
-          .update({ points: (profile as { points: number }).points + 10 })
-          .eq('id', p.user_id)
-      }
+      await supabase.rpc('increment_points', {
+        target_user_id: p.user_id,
+        amount: 10,
+      })
     }
   }
 
