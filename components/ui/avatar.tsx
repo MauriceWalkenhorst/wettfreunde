@@ -1,4 +1,7 @@
+'use client'
+
 import { cn, getInitials } from '@/lib/utils'
+import { useState } from 'react'
 import Image from 'next/image'
 
 interface AvatarProps {
@@ -23,7 +26,9 @@ const pxMap = {
 }
 
 export function Avatar({ src, name, size = 'md', className }: AvatarProps) {
+  const [imgError, setImgError] = useState(false)
   const px = pxMap[size]
+  const showImage = src && !imgError
 
   return (
     <div
@@ -33,8 +38,15 @@ export function Avatar({ src, name, size = 'md', className }: AvatarProps) {
         className
       )}
     >
-      {src ? (
-        <Image src={src} alt={name} width={px} height={px} className="object-cover w-full h-full" />
+      {showImage ? (
+        <Image
+          src={src}
+          alt={name}
+          width={px}
+          height={px}
+          className="object-cover w-full h-full"
+          onError={() => setImgError(true)}
+        />
       ) : (
         <span>{getInitials(name)}</span>
       )}
