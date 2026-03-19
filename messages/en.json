@@ -47,6 +47,9 @@
     "points": "Points",
     "won": "Won",
     "winRate": "Win Rate",
+    "streak": "Streak 🔥",
+    "openStakes": "Open Stakes",
+    "noOpenStakes": "No open stakes.",
     "authProvider": "Auth Provider",
     "memberSince": "Member since",
     "language": "Language",
@@ -81,7 +84,8 @@
     "deleteConfirm": "Really delete this bet? This cannot be undone.",
     "sidesYes": "Yes",
     "sidesNo": "No",
-    "sidesOpen": "Open"
+    "sidesOpen": "Open",
+    "expiresAt": "Expires {date}"
   },
   "betForm": {
     "stepIndicator": "Step {current} of {total} — {label}",
@@ -95,6 +99,8 @@
     "questionPlaceholder": "Did Manu drink a beer yesterday?",
     "stakeLabel": "Stake",
     "stakePlaceholder": "A beer, a coffee...",
+    "expiryLabel": "Expiry Date (optional)",
+    "noExpiry": "No expiry",
     "subjectTitle": "Subject",
     "subjectSubtitle": "Who has to answer the question?",
     "noOtherUsers": "No other users on the platform yet.",
@@ -124,7 +130,9 @@
     "points": "+{n} Points",
     "lost": "Lost",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "waitingCount": "{count, plural, one {# person is betting on you} other {# people are betting on you}}",
+    "expiresOn": "Ends {date}"
   },
   "betResolution": {
     "subjectPrompt": "That's you! What's your answer?",
@@ -137,7 +145,9 @@
     "confirmSide": "Confirm Side",
     "declineButton": "Decline",
     "declineConfirm": "Really decline this bet? All participants will be notified.",
-    "error": "Error"
+    "error": "Error",
+    "celebrationTitle": "Answer saved!",
+    "celebrationBody": "The result is being calculated..."
   },
   "notifications": {
     "title": "Notifications",
@@ -176,6 +186,14 @@
   },
   "friendPicker": {
     "noFriends": "No users yet. Invite some friends first."
+  },
+  "betComments": {
+    "title": "Comments",
+    "placeholder": "Write a comment...",
+    "send": "Send",
+    "empty": "No comments yet. Be the first!",
+    "deleteOwn": "Delete",
+    "noComment": ""
   },
   "groups": {
     "title": "Groups",

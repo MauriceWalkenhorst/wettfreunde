@@ -9,6 +9,7 @@ interface CreateBetInput {
   subjectId: string
   participantIds: string[]
   creatorSide: boolean
+  expiresAt?: string
 }
 
 export async function createBet(input: CreateBetInput) {
@@ -23,6 +24,7 @@ export async function createBet(input: CreateBetInput) {
       stake: input.stake,
       subject_id: input.subjectId,
       created_by: user.id,
+      expires_at: input.expiresAt ? new Date(input.expiresAt).toISOString() : null,
     })
     .select('id')
     .single()
@@ -140,9 +142,28 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
 
     if (won) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase as any).rpc('increment_points', {
+      const { data: newStreak } = await (supabase as any).rpc('increment_points', {
         target_user_id: p.user_id,
         amount: 10,
+      })
+      if (typeof newStreak === 'number' && newStreak > 0 && newStreak % 3 === 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (supabase as any).rpc('add_bonus_points', {
+          target_user_id: p.user_id,
+          amount: 5,
+        })
+        await supabase.from('notifications').insert({
+          user_id: p.user_id,
+          type: 'bet_result' as const,
+          title: '🔥 Streak-Bonus!',
+          body: `${newStreak}er-Streak! +5 Bonus-Punkte`,
+          ref_id: betId,
+        })
+      }
+    } else if (won === false) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase as any).rpc('reset_streak', {
+        target_user_id: p.user_id,
       })
     }
   }

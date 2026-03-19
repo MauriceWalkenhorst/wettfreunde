@@ -49,6 +49,12 @@ export function BetCard({ bet, currentUserId }: BetCardProps) {
         <Badge variant={statusVariant as 'default' | 'success' | 'warning'}>{statusLabel}</Badge>
       </div>
 
+      {isSubject && bet.status === 'pending' && bet.participants.length > 0 && (
+        <p className="text-xs text-zinc-500 mt-1.5">
+          🎲 {t('waitingCount', { count: bet.participants.length })}
+        </p>
+      )}
+
       <div className="mt-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex -space-x-1.5">
@@ -65,7 +71,19 @@ export function BetCard({ bet, currentUserId }: BetCardProps) {
           <Avatar src={bet.subject.avatar_url} name={bet.subject.display_name} size="sm" />
           <span className="text-xs text-zinc-600 font-medium">{bet.subject.display_name}</span>
         </div>
-        <span className="text-xs text-zinc-400">{formatRelativeTime(bet.created_at, locale)}</span>
+        <div className="flex flex-col items-end gap-0.5">
+          <span className="text-xs text-zinc-400">{formatRelativeTime(bet.created_at, locale)}</span>
+          {bet.expires_at && new Date(bet.expires_at) > new Date() && (
+            <span className="text-xs text-zinc-400">
+              {t('expiresOn', {
+                date: new Date(bet.expires_at).toLocaleDateString(
+                  locale === 'de' ? 'de-DE' : 'en-US',
+                  { day: 'numeric', month: 'short' }
+                ),
+              })}
+            </span>
+          )}
+        </div>
       </div>
 
       {bet.status === 'answered' && (

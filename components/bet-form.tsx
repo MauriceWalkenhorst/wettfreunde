@@ -27,12 +27,19 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
 
   const [question, setQuestion] = useState('')
   const [stake, setStake] = useState('')
+  const [expiresAt, setExpiresAt] = useState<string>('')
   const [subjectId, setSubjectId] = useState<string | null>(null)
   const [participantIds, setParticipantIds] = useState<string[]>([currentUser.id])
   const [creatorSide, setCreatorSide] = useState<boolean | null>(null)
 
   const steps: Step[] = ['details', 'subject', 'participants', 'side']
   const stepIndex = steps.indexOf(step)
+
+  const tomorrowStr = (() => {
+    const d = new Date()
+    d.setDate(d.getDate() + 1)
+    return d.toISOString().split('T')[0]
+  })()
 
   function toggleParticipant(id: string) {
     if (id === currentUser.id) return
@@ -57,6 +64,7 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
         subjectId,
         participantIds,
         creatorSide,
+        expiresAt: expiresAt || undefined,
       })
       router.push(`/bets/${betId}`)
     } catch (e) {
@@ -124,6 +132,25 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
             value={stake}
             onChange={(e) => setStake(e.target.value)}
           />
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-zinc-700">{t('expiryLabel')}</label>
+            <input
+              type="date"
+              min={tomorrowStr}
+              value={expiresAt}
+              onChange={(e) => setExpiresAt(e.target.value)}
+              className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent"
+            />
+            {expiresAt && (
+              <button
+                type="button"
+                onClick={() => setExpiresAt('')}
+                className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
+              >
+                {t('noExpiry')}
+              </button>
+            )}
+          </div>
         </div>
       )}
 

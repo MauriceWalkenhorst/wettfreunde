@@ -40,6 +40,25 @@ export async function getBetsForUser(): Promise<{
 
   const bets = data as unknown as BetWithDetails[]
 
+  // Auto-expire pending bets where expires_at < now
+  const now = new Date().toISOString()
+  const expiredIds = bets
+    .filter((b) => b.status === 'pending' && b.expires_at !== null && b.expires_at < now)
+    .map((b) => b.id)
+
+  if (expiredIds.length > 0) {
+    await supabase
+      .from('bets')
+      .update({ status: 'expired' })
+      .in('id', expiredIds)
+    // Update local bets array to reflect the new status
+    for (const b of bets) {
+      if (expiredIds.includes(b.id)) {
+        b.status = 'expired'
+      }
+    }
+  }
+
   const open = bets.filter(
     (b) => b.status === 'pending' && b.subject_id === user.id
   )

@@ -10,8 +10,9 @@ import { ShareBetButton } from '@/components/share-bet-button'
 import { formatRelativeTime } from '@/lib/utils'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Profile } from '@/lib/supabase/types'
+import { Profile, CommentWithUser } from '@/lib/supabase/types'
 import { getTranslations, getLocale } from 'next-intl/server'
+import { BetComments } from '@/components/bet-comments'
 
 type BetPhoto = {
   id: string
@@ -64,6 +65,14 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
     })
   )
 
+  const { data: betCommentsRaw } = await supabase
+    .from('bet_comments')
+    .select('*, commenter:profiles(*)')
+    .eq('bet_id', id)
+    .order('created_at', { ascending: true })
+
+  const betComments = (betCommentsRaw ?? []) as unknown as CommentWithUser[]
+
   const statusLabel =
     bet.status === 'answered' ? t('resolved') :
     bet.status === 'expired' ? t('expired') :
@@ -84,6 +93,16 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
             <p className="text-xs text-zinc-400 uppercase tracking-wide font-medium">{t('theQuestion')}</p>
             <h1 className="text-xl font-bold text-zinc-900 leading-snug">{bet.question}</h1>
             <p className="text-sm text-zinc-500">{t('stake')} <strong>{bet.stake}</strong></p>
+            {bet.expires_at && (
+              <p className="text-xs text-zinc-400">
+                {t('expiresAt', {
+                  date: new Date(bet.expires_at).toLocaleDateString(
+                    locale === 'de' ? 'de-DE' : 'en-US',
+                    { day: 'numeric', month: 'short', year: 'numeric' }
+                  ),
+                })}
+              </p>
+            )}
           </div>
           <Badge variant={bet.status === 'answered' ? 'success' : bet.status === 'expired' ? 'danger' : 'warning'}>
             {statusLabel}
@@ -212,6 +231,9 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
       {bet.status === 'answered' && isInvolved && (
         <BetPhotoUpload betId={bet.id} />
       )}
+
+      {/* Comments */}
+      <BetComments betId={bet.id} comments={betComments} currentUserId={user.id} />
     </div>
   )
 }

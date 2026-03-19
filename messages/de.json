@@ -47,6 +47,9 @@
     "points": "Punkte",
     "won": "Gewonnen",
     "winRate": "Trefferquote",
+    "streak": "Streak 🔥",
+    "openStakes": "Offene Einsätze",
+    "noOpenStakes": "Keine offenen Einsätze.",
     "authProvider": "Auth-Anbieter",
     "memberSince": "Mitglied seit",
     "language": "Sprache",
@@ -81,7 +84,8 @@
     "deleteConfirm": "Wette wirklich löschen? Das kann nicht rückgängig gemacht werden.",
     "sidesYes": "Ja",
     "sidesNo": "Nein",
-    "sidesOpen": "Offen"
+    "sidesOpen": "Offen",
+    "expiresAt": "Läuft ab am {date}"
   },
   "betForm": {
     "stepIndicator": "Schritt {current} von {total} — {label}",
@@ -95,6 +99,8 @@
     "questionPlaceholder": "Hat Manu gestern ein Bier getrunken?",
     "stakeLabel": "Einsatz",
     "stakePlaceholder": "Ein Weizen, ein Kaffee...",
+    "expiryLabel": "Ablaufdatum (optional)",
+    "noExpiry": "Kein Ablaufdatum",
     "subjectTitle": "Befragte Person",
     "subjectSubtitle": "Wer muss die Frage beantworten?",
     "noOtherUsers": "Noch keine anderen Nutzer auf der Plattform.",
@@ -124,7 +130,9 @@
     "points": "+{n} Punkte",
     "lost": "Verloren",
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    "waitingCount": "{count, plural, one {# Person wettet auf dich} other {# Personen wetten auf dich}}",
+    "expiresOn": "Endet {date}"
   },
   "betResolution": {
     "subjectPrompt": "Das bist du! Wie lautet deine Antwort?",
@@ -137,7 +145,9 @@
     "confirmSide": "Seite bestätigen",
     "declineButton": "Ablehnen",
     "declineConfirm": "Wette wirklich ablehnen? Alle Teilnehmer werden benachrichtigt.",
-    "error": "Fehler"
+    "error": "Fehler",
+    "celebrationTitle": "Antwort gespeichert!",
+    "celebrationBody": "Das Ergebnis wird gerade ermittelt..."
   },
   "notifications": {
     "title": "Benachrichtigungen",
@@ -176,6 +186,14 @@
   },
   "friendPicker": {
     "noFriends": "Noch keine Nutzer. Lade zuerst Freunde ein."
+  },
+  "betComments": {
+    "title": "Kommentare",
+    "placeholder": "Kommentar schreiben...",
+    "send": "Senden",
+    "empty": "Noch keine Kommentare. Sei der Erste!",
+    "deleteOwn": "Löschen",
+    "noComment": ""
   },
   "groups": {
     "title": "Gruppen",

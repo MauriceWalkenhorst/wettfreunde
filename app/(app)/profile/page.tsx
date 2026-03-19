@@ -33,6 +33,14 @@ export default async function ProfilePage() {
   const wonBets = finished.filter((p) => p.won).length
   const winRate = totalBets > 0 ? Math.round((wonBets / totalBets) * 100) : 0
 
+  type LostBet = { won: boolean | null; bet: { question: string; stake: string } | null }
+  const { data: lostBetsRaw } = await supabase
+    .from('bet_participants')
+    .select('won, bet:bets(question, stake)')
+    .eq('user_id', user.id)
+    .eq('won', false)
+  const lostBets = (lostBetsRaw ?? []) as unknown as LostBet[]
+
   const [t, locale] = await Promise.all([getTranslations('profile'), getLocale()])
 
   return (
@@ -48,7 +56,7 @@ export default async function ProfilePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 pt-2">
+        <div className="grid grid-cols-2 gap-3 pt-2">
           <div className="bg-zinc-50 rounded-xl p-3 text-center">
             <div className="text-2xl font-bold text-zinc-900">{profile.points}</div>
             <div className="text-xs text-zinc-500 mt-0.5">{t('points')}</div>
@@ -61,8 +69,26 @@ export default async function ProfilePage() {
             <div className="text-2xl font-bold text-zinc-900">{winRate}%</div>
             <div className="text-xs text-zinc-500 mt-0.5">{t('winRate')}</div>
           </div>
+          <div className="bg-zinc-50 rounded-xl p-3 text-center">
+            <div className="text-2xl font-bold text-zinc-900">{profile.streak ?? 0}</div>
+            <div className="text-xs text-zinc-500 mt-0.5">{t('streak')}</div>
+          </div>
         </div>
       </div>
+
+      {lostBets.length > 0 && (
+        <div className="bg-white rounded-2xl border border-zinc-200 p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-zinc-700 uppercase tracking-wide">{t('openStakes')}</h2>
+          <div className="space-y-2">
+            {lostBets.map((lb, i) => (
+              <div key={i} className="flex flex-col gap-0.5 py-2 border-b border-zinc-100 last:border-0">
+                <span className="text-sm font-semibold text-zinc-900">{lb.bet?.stake ?? '—'}</span>
+                <span className="text-xs text-zinc-500 truncate">{lb.bet?.question ?? ''}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-2xl border border-zinc-200 p-4">
         <div className="flex items-center justify-between py-1">

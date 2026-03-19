@@ -9,6 +9,7 @@ export type Database = {
           display_name: string
           avatar_url: string | null
           points: number
+          streak: number
           created_at: string
         }
         Insert: {
@@ -16,6 +17,7 @@ export type Database = {
           display_name: string
           avatar_url?: string | null
           points?: number
+          streak?: number
           created_at?: string
         }
         Update: {
@@ -23,6 +25,7 @@ export type Database = {
           display_name?: string
           avatar_url?: string | null
           points?: number
+          streak?: number
           created_at?: string
         }
         Relationships: []
@@ -294,6 +297,45 @@ export type Database = {
         }
         Relationships: []
       }
+      bet_comments: {
+        Row: {
+          id: string
+          bet_id: string
+          user_id: string
+          body: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          bet_id: string
+          user_id: string
+          body: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          bet_id?: string
+          user_id?: string
+          body?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'bet_comments_bet_id_fkey'
+            columns: ['bet_id']
+            isOneToOne: false
+            referencedRelation: 'bets'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'bet_comments_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -328,4 +370,15 @@ export type GroupMember = Database['public']['Tables']['group_members']['Row']
 export type GroupWithMembers = Group & {
   members: (GroupMember & { user: Profile })[]
   creator: Profile
+}
+
+export type BetComment = Database['public']['Tables']['bet_comments']['Row']
+
+export type CommentWithUser = {
+  id: string
+  bet_id: string
+  user_id: string
+  body: string
+  created_at: string
+  commenter: Profile
 }

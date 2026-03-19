@@ -22,6 +22,7 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [celebrating, setCelebrating] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -37,7 +38,8 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
     setError(null)
     try {
       await answerBet(betId, selectedAnswer, photo ?? undefined)
-      router.refresh()
+      setCelebrating(true)
+      setTimeout(() => router.refresh(), 2500)
     } catch (e) {
       setError(e instanceof Error ? e.message : t('error'))
       setLoading(false)
@@ -68,6 +70,19 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
       setError(e instanceof Error ? e.message : t('error'))
       setLoading(false)
     }
+  }
+
+  if (celebrating) {
+    return (
+      <div className="bg-white rounded-2xl border border-zinc-200 p-8 text-center space-y-3">
+        <div className="text-5xl">🎉</div>
+        <h2 className="text-lg font-bold text-zinc-900">{t('celebrationTitle')}</h2>
+        <p className="text-sm text-zinc-500">{t('celebrationBody')}</p>
+        <div className="flex justify-center pt-2">
+          <div className="w-5 h-5 border-2 border-zinc-300 border-t-zinc-900 rounded-full animate-spin" />
+        </div>
+      </div>
+    )
   }
 
   if (isSubject) {
