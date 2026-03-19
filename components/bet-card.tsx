@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { BetWithDetails } from '@/lib/supabase/types'
 import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -10,17 +13,18 @@ interface BetCardProps {
 }
 
 export function BetCard({ bet, currentUserId }: BetCardProps) {
+  const t = useTranslations('betCard')
   const myParticipation = bet.participants.find((p) => p.user_id === currentUserId)
   const isSubject = bet.subject_id === currentUserId
 
   const statusLabel =
     bet.status === 'answered'
-      ? 'Aufgelöst'
+      ? t('resolved')
       : isSubject
-      ? 'Deine Antwort gefragt'
+      ? t('awaitingAnswer')
       : myParticipation?.side === null
-      ? 'Seite wählen'
-      : 'Offen'
+      ? t('pickSide')
+      : t('open')
 
   const statusVariant =
     bet.status === 'answered'
@@ -37,7 +41,7 @@ export function BetCard({ bet, currentUserId }: BetCardProps) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <p className="font-medium text-zinc-900 leading-snug line-clamp-2">{bet.question}</p>
-          <p className="text-sm text-zinc-500 mt-1">Einsatz: {bet.stake}</p>
+          <p className="text-sm text-zinc-500 mt-1">{t('stake')} {bet.stake}</p>
         </div>
         <Badge variant={statusVariant as 'default' | 'success' | 'warning'}>{statusLabel}</Badge>
       </div>
@@ -54,7 +58,7 @@ export function BetCard({ bet, currentUserId }: BetCardProps) {
               </div>
             )}
           </div>
-          <span className="text-xs text-zinc-400">Wetten auf</span>
+          <span className="text-xs text-zinc-400">{t('bettingOn')}</span>
           <Avatar src={bet.subject.avatar_url} name={bet.subject.display_name} size="sm" />
           <span className="text-xs text-zinc-600 font-medium">{bet.subject.display_name}</span>
         </div>
@@ -64,11 +68,11 @@ export function BetCard({ bet, currentUserId }: BetCardProps) {
       {bet.status === 'answered' && (
         <div className="mt-3 pt-3 border-t border-zinc-100 flex items-center gap-2">
           <span className="text-sm">
-            Antwort: <strong>{bet.subject_answer ? 'Ja' : 'Nein'}</strong>
+            {t('answer')} <strong>{bet.subject_answer ? 'Ja' : 'Nein'}</strong>
           </span>
           {myParticipation?.won != null && (
             <Badge variant={myParticipation.won ? 'success' : 'danger'}>
-              {myParticipation.won ? `+${myParticipation.points_awarded} Punkte` : 'Verloren'}
+              {myParticipation.won ? t('points', { n: myParticipation.points_awarded }) : t('lost')}
             </Badge>
           )}
         </div>

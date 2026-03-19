@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { Profile } from '@/lib/supabase/types'
 import { Avatar } from '@/components/ui/avatar'
 
@@ -9,6 +12,8 @@ interface LeaderboardTableProps {
 const medals = ['🥇', '🥈', '🥉']
 
 export function LeaderboardTable({ profiles, currentUserId }: LeaderboardTableProps) {
+  const t = useTranslations('leaderboardTable')
+
   return (
     <div className="space-y-2">
       {profiles.map((profile, index) => {
@@ -32,12 +37,12 @@ export function LeaderboardTable({ profiles, currentUserId }: LeaderboardTablePr
             <div className="flex-1 min-w-0">
               <p className={`font-semibold truncate ${isMe ? 'text-white' : 'text-zinc-900'}`}>
                 {profile.display_name}
-                {isMe && ' (Du)'}
+                {isMe && ` ${t('you')}`}
               </p>
             </div>
             <div className={`font-bold text-lg tabular-nums ${isMe ? 'text-white' : 'text-zinc-900'}`}>
               {profile.points}
-              <span className={`text-xs font-normal ml-1 ${isMe ? 'text-white/60' : 'text-zinc-500'}`}>Pkt.</span>
+              <span className={`text-xs font-normal ml-1 ${isMe ? 'text-white/60' : 'text-zinc-500'}`}>{t('pts')}</span>
             </div>
           </div>
         )

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Notification } from '@/lib/supabase/types'
 import { formatRelativeTime } from '@/lib/utils'
 import { markNotificationRead, markAllNotificationsRead } from '@/lib/actions/notifications'
@@ -13,6 +14,7 @@ interface NotificationBellProps {
 export function NotificationBell({ notifications }: NotificationBellProps) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
+  const t = useTranslations('notifications')
   const unread = notifications.filter((n) => !n.read)
 
   async function handleNotificationClick(n: Notification) {
@@ -34,7 +36,7 @@ export function NotificationBell({ notifications }: NotificationBellProps) {
       <button
         onClick={() => setOpen(!open)}
         className="relative w-9 h-9 rounded-xl bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center transition-colors"
-        aria-label="Benachrichtigungen"
+        aria-label={t('title')}
       >
         <svg className="w-4 h-4 text-zinc-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -52,19 +54,19 @@ export function NotificationBell({ notifications }: NotificationBellProps) {
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-11 z-50 w-80 max-h-[480px] overflow-y-auto bg-white rounded-2xl border border-zinc-200 shadow-xl">
             <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
-              <span className="text-sm font-semibold text-zinc-900">Benachrichtigungen</span>
+              <span className="text-sm font-semibold text-zinc-900">{t('title')}</span>
               {unread.length > 0 && (
                 <button
                   onClick={handleMarkAll}
                   className="text-xs text-zinc-500 hover:text-zinc-900 transition-colors"
                 >
-                  Alle lesen
+                  {t('markAllRead')}
                 </button>
               )}
             </div>
 
             {notifications.length === 0 ? (
-              <div className="py-8 text-center text-sm text-zinc-500">Keine Benachrichtigungen</div>
+              <div className="py-8 text-center text-sm text-zinc-500">{t('empty')}</div>
             ) : (
               <div className="divide-y divide-zinc-100">
                 {notifications.map((n) => (

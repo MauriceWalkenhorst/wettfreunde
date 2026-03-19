@@ -1,0 +1,177 @@
+{
+  "nav": {
+    "feed": "Feed",
+    "bets": "Bets",
+    "friends": "Friends",
+    "groups": "Groups",
+    "leaderboard": "Leaderboard",
+    "profile": "Profile"
+  },
+  "login": {
+    "tagline": "Bet with your friends. Proof pays.",
+    "signInGoogle": "Sign in with Google",
+    "terms": "By signing in, you agree to our Terms of Service."
+  },
+  "dashboard": {
+    "title": "Feed",
+    "subtitle": "Your bets at a glance",
+    "newBet": "+ New Bet",
+    "awaitingAnswer": "Your answer needed ({count})",
+    "activeBets": "Active Bets ({count})",
+    "finished": "Finished ({count})",
+    "emptyTitle": "No bets yet",
+    "emptySubtitle": "Create a new bet or invite friends.",
+    "createBet": "Create Bet",
+    "inviteFriends": "Invite Friends"
+  },
+  "friends": {
+    "title": "Friends",
+    "noFriends": "No friends yet",
+    "friendCount": "{count, plural, one {# Friend} other {# Friends}}",
+    "yourFriends": "Your Friends",
+    "points": "Points",
+    "friendStatus": "Friends",
+    "allUsers": "All on the Platform",
+    "noOtherUsers": "No other users yet",
+    "shareSubtitle": "Share the invite link with your friends."
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "All players · updated live",
+    "live": "Live",
+    "emptyTitle": "No data yet",
+    "emptySubtitle": "Complete bets to earn points."
+  },
+  "profile": {
+    "title": "Profile",
+    "points": "Points",
+    "won": "Won",
+    "winRate": "Win Rate",
+    "authProvider": "Auth Provider",
+    "memberSince": "Member since",
+    "language": "Language",
+    "signOut": "Sign Out"
+  },
+  "betNew": {
+    "backToFeed": "Back to Feed",
+    "title": "New Bet"
+  },
+  "betDetail": {
+    "backToFeed": "Back to Feed",
+    "theQuestion": "The Question",
+    "stake": "Stake:",
+    "resolved": "Resolved",
+    "expired": "Expired",
+    "open": "Open",
+    "askedIs": "Asked",
+    "answer": "Answer",
+    "proofFromSubject": "Proof from Subject",
+    "bettors": "Bettors",
+    "you": "(You)",
+    "pts": "Pts.",
+    "lost": "Lost",
+    "notChosenYet": "Not chosen yet",
+    "createdBy": "Created by {creator} · {time}",
+    "proofPhotos": "Proof Photos"
+  },
+  "betForm": {
+    "stepIndicator": "Step {current} of {total} — {label}",
+    "stepDetails": "The Bet",
+    "stepSubject": "Subject",
+    "stepParticipants": "Participants",
+    "stepSide": "Your Side",
+    "detailsTitle": "The Bet",
+    "detailsSubtitle": "What's the bet?",
+    "questionLabel": "Question (Yes/No)",
+    "questionPlaceholder": "Did Manu drink a beer yesterday?",
+    "stakeLabel": "Stake",
+    "stakePlaceholder": "A beer, a coffee...",
+    "subjectTitle": "Subject",
+    "subjectSubtitle": "Who has to answer the question?",
+    "noOtherUsers": "No other users on the platform yet.",
+    "participantsTitle": "Select Participants",
+    "participantsSubtitle": "Who else is betting? (optional)",
+    "you": "(You)",
+    "noParticipants": "No other users available.",
+    "sideTitle": "Your Side",
+    "sideSubtitle": "What do you think?",
+    "questionFor": "Question for {name}",
+    "yes": "Yes",
+    "no": "No",
+    "errorCreating": "Error creating bet",
+    "back": "Back",
+    "next": "Next",
+    "createBet": "Create Bet"
+  },
+  "betCard": {
+    "resolved": "Resolved",
+    "awaitingAnswer": "Your answer needed",
+    "pickSide": "Pick side",
+    "open": "Open",
+    "stake": "Stake:",
+    "bettingOn": "Betting on",
+    "answer": "Answer:",
+    "points": "+{n} Points",
+    "lost": "Lost"
+  },
+  "betResolution": {
+    "subjectPrompt": "That's you! What's your answer?",
+    "yes": "Yes",
+    "no": "No",
+    "photoLabel": "Photo proof (optional)",
+    "photoButton": "Take or choose a photo",
+    "confirmAnswer": "Confirm Answer",
+    "pickSidePrompt": "Choose your side!",
+    "confirmSide": "Confirm Side",
+    "error": "Error"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "empty": "No notifications"
+  },
+  "shareInvite": {
+    "title": "Invite Friends",
+    "subtitle": "Share a personal invite link.",
+    "copied": "✓ Copied",
+    "copy": "Copy",
+    "share": "Share",
+    "regenerate": "Regenerate",
+    "createLink": "Create Invite Link",
+    "shareText": "Join my Wettfreunde group!",
+    "error": "Link could not be created. Please try again."
+  },
+  "leaderboardTable": {
+    "you": "(You)",
+    "pts": "Pts."
+  },
+  "addFriend": {
+    "friendStatus": "Friends",
+    "add": "+ Add"
+  },
+  "groups": {
+    "title": "Groups",
+    "subtitle": "Your bet groups",
+    "newGroup": "New Group",
+    "emptyTitle": "No groups yet",
+    "emptySubtitle": "Create a group with your friends.",
+    "createGroup": "Create Group",
+    "memberCount": "{count, plural, one {# Member} other {# Members}}",
+    "backToGroups": "Back to Groups",
+    "newGroupTitle": "New Group",
+    "groupName": "Group Name",
+    "groupNamePlaceholder": "e.g. Flatmates, Work Crew...",
+    "addMembers": "Add Members",
+    "noUsersAvailable": "No other users available.",
+    "errorCreating": "Error creating group",
+    "leaderboard": "Leaderboard",
+    "betHistory": "Bet History",
+    "noBets": "No completed bets yet.",
+    "you": "(You)",
+    "pts": "Pts.",
+    "lost": "Lost",
+    "removeMember": "Remove",
+    "add": "Add",
+    "nonMembers": "Add Members"
+  }
+}

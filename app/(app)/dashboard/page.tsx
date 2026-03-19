@@ -5,38 +5,41 @@ import { getNotifications } from '@/lib/queries/notifications'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { NotificationBell } from '@/components/notification-bell'
+import { getTranslations } from 'next-intl/server'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const [{ open, active, finished }, notifications] = await Promise.all([
+  const [{ open, active, finished }, notifications, t] = await Promise.all([
     getBetsForUser(),
     getNotifications(),
+    getTranslations('dashboard'),
   ])
 
   const allBets = [...open, ...active, ...finished]
-  const unreadNotifications = notifications.filter((n) => !n.read)
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900">Feed</h1>
-          <p className="text-sm text-zinc-500 mt-0.5">Deine Wetten im Überblick</p>
+          <h1 className="text-2xl font-bold text-zinc-900">{t('title')}</h1>
+          <p className="text-sm text-zinc-500 mt-0.5">{t('subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           <NotificationBell notifications={notifications} />
           <Link href="/bets/new">
-            <Button size="sm">+ Neue Wette</Button>
+            <Button size="sm">{t('newBet')}</Button>
           </Link>
         </div>
       </div>
 
       {open.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide">Deine Antwort gefragt ({open.length})</h2>
+          <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide">
+            {t('awaitingAnswer', { count: open.length })}
+          </h2>
           {open.map((bet) => (
             <BetCard key={bet.id} bet={bet} currentUserId={user.id} />
           ))}
@@ -45,7 +48,9 @@ export default async function DashboardPage() {
 
       {active.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide">Aktive Wetten ({active.length})</h2>
+          <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide">
+            {t('activeBets', { count: active.length })}
+          </h2>
           {active.map((bet) => (
             <BetCard key={bet.id} bet={bet} currentUserId={user.id} />
           ))}
@@ -54,7 +59,9 @@ export default async function DashboardPage() {
 
       {finished.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide">Abgeschlossen ({finished.length})</h2>
+          <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide">
+            {t('finished', { count: finished.length })}
+          </h2>
           {finished.map((bet) => (
             <BetCard key={bet.id} bet={bet} currentUserId={user.id} />
           ))}
@@ -64,14 +71,14 @@ export default async function DashboardPage() {
       {allBets.length === 0 && (
         <div className="text-center py-16 space-y-3">
           <div className="text-4xl">🎲</div>
-          <p className="text-zinc-900 font-medium">Noch keine Wetten</p>
-          <p className="text-sm text-zinc-500">Erstell eine neue Wette oder lade Freunde ein.</p>
+          <p className="text-zinc-900 font-medium">{t('emptyTitle')}</p>
+          <p className="text-sm text-zinc-500">{t('emptySubtitle')}</p>
           <div className="flex justify-center gap-3 mt-4">
             <Link href="/bets/new">
-              <Button>Wette erstellen</Button>
+              <Button>{t('createBet')}</Button>
             </Link>
             <Link href="/friends">
-              <Button variant="secondary">Freunde einladen</Button>
+              <Button variant="secondary">{t('inviteFriends')}</Button>
             </Link>
           </div>
         </div>

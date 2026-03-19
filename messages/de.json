@@ -1,0 +1,177 @@
+{
+  "nav": {
+    "feed": "Feed",
+    "bets": "Wetten",
+    "friends": "Freunde",
+    "groups": "Gruppen",
+    "leaderboard": "Rangliste",
+    "profile": "Profil"
+  },
+  "login": {
+    "tagline": "Wette mit deinen Freunden. Beweise zahlen.",
+    "signInGoogle": "Mit Google anmelden",
+    "terms": "Durch die Anmeldung stimmst du unseren Nutzungsbedingungen zu."
+  },
+  "dashboard": {
+    "title": "Feed",
+    "subtitle": "Deine Wetten im Überblick",
+    "newBet": "+ Neue Wette",
+    "awaitingAnswer": "Deine Antwort gefragt ({count})",
+    "activeBets": "Aktive Wetten ({count})",
+    "finished": "Abgeschlossen ({count})",
+    "emptyTitle": "Noch keine Wetten",
+    "emptySubtitle": "Erstell eine neue Wette oder lade Freunde ein.",
+    "createBet": "Wette erstellen",
+    "inviteFriends": "Freunde einladen"
+  },
+  "friends": {
+    "title": "Freunde",
+    "noFriends": "Noch keine Freunde",
+    "friendCount": "{count, plural, one {# Freund} other {# Freunde}}",
+    "yourFriends": "Deine Freunde",
+    "points": "Punkte",
+    "friendStatus": "Befreundet",
+    "allUsers": "Alle auf der Plattform",
+    "noOtherUsers": "Noch keine anderen Nutzer",
+    "shareSubtitle": "Teile den Einladungslink mit deinen Freunden."
+  },
+  "leaderboard": {
+    "title": "Rangliste",
+    "subtitle": "Alle Spieler · aktualisiert live",
+    "live": "Live",
+    "emptyTitle": "Noch keine Daten",
+    "emptySubtitle": "Führe Wetten durch, um Punkte zu sammeln."
+  },
+  "profile": {
+    "title": "Profil",
+    "points": "Punkte",
+    "won": "Gewonnen",
+    "winRate": "Trefferquote",
+    "authProvider": "Auth-Anbieter",
+    "memberSince": "Mitglied seit",
+    "language": "Sprache",
+    "signOut": "Abmelden"
+  },
+  "betNew": {
+    "backToFeed": "Zurück zum Feed",
+    "title": "Neue Wette"
+  },
+  "betDetail": {
+    "backToFeed": "Zurück zum Feed",
+    "theQuestion": "Die Frage",
+    "stake": "Einsatz:",
+    "resolved": "Aufgelöst",
+    "expired": "Abgelaufen",
+    "open": "Offen",
+    "askedIs": "Befragt wird",
+    "answer": "Antwort",
+    "proofFromSubject": "Beweis vom Befragten",
+    "bettors": "Wetter",
+    "you": "(Du)",
+    "pts": "Pkt.",
+    "lost": "Verloren",
+    "notChosenYet": "Noch nicht gewählt",
+    "createdBy": "Erstellt von {creator} · {time}",
+    "proofPhotos": "Beweis-Fotos"
+  },
+  "betForm": {
+    "stepIndicator": "Schritt {current} von {total} — {label}",
+    "stepDetails": "Die Wette",
+    "stepSubject": "Befragte Person",
+    "stepParticipants": "Teilnehmer",
+    "stepSide": "Deine Seite",
+    "detailsTitle": "Die Wette",
+    "detailsSubtitle": "Was wird gewettet?",
+    "questionLabel": "Frage (Ja/Nein)",
+    "questionPlaceholder": "Hat Manu gestern ein Bier getrunken?",
+    "stakeLabel": "Einsatz",
+    "stakePlaceholder": "Ein Weizen, ein Kaffee...",
+    "subjectTitle": "Befragte Person",
+    "subjectSubtitle": "Wer muss die Frage beantworten?",
+    "noOtherUsers": "Noch keine anderen Nutzer auf der Plattform.",
+    "participantsTitle": "Teilnehmer auswählen",
+    "participantsSubtitle": "Wer wettet noch mit? (optional)",
+    "you": "(Du)",
+    "noParticipants": "Keine weiteren Nutzer verfügbar.",
+    "sideTitle": "Deine Seite",
+    "sideSubtitle": "Was glaubst du?",
+    "questionFor": "Frage an {name}",
+    "yes": "Ja",
+    "no": "Nein",
+    "errorCreating": "Fehler beim Erstellen der Wette",
+    "back": "Zurück",
+    "next": "Weiter",
+    "createBet": "Wette erstellen"
+  },
+  "betCard": {
+    "resolved": "Aufgelöst",
+    "awaitingAnswer": "Deine Antwort gefragt",
+    "pickSide": "Seite wählen",
+    "open": "Offen",
+    "stake": "Einsatz:",
+    "bettingOn": "Wetten auf",
+    "answer": "Antwort:",
+    "points": "+{n} Punkte",
+    "lost": "Verloren"
+  },
+  "betResolution": {
+    "subjectPrompt": "Das bist du! Wie lautet deine Antwort?",
+    "yes": "Ja",
+    "no": "Nein",
+    "photoLabel": "Foto-Beweis (optional)",
+    "photoButton": "Foto aufnehmen oder auswählen",
+    "confirmAnswer": "Antwort bestätigen",
+    "pickSidePrompt": "Wähle deine Seite!",
+    "confirmSide": "Seite bestätigen",
+    "error": "Fehler"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "markAllRead": "Alle lesen",
+    "empty": "Keine Benachrichtigungen"
+  },
+  "shareInvite": {
+    "title": "Freunde einladen",
+    "subtitle": "Teile einen persönlichen Einladungslink.",
+    "copied": "✓ Kopiert",
+    "copy": "Kopieren",
+    "share": "Teilen",
+    "regenerate": "Neu generieren",
+    "createLink": "Einladungslink erstellen",
+    "shareText": "Tritt meiner Wettfreunde-Gruppe bei!",
+    "error": "Link konnte nicht erstellt werden. Bitte erneut versuchen."
+  },
+  "leaderboardTable": {
+    "you": "(Du)",
+    "pts": "Pkt."
+  },
+  "addFriend": {
+    "friendStatus": "Befreundet",
+    "add": "+ Hinzufügen"
+  },
+  "groups": {
+    "title": "Gruppen",
+    "subtitle": "Deine Wettgruppen",
+    "newGroup": "Neue Gruppe",
+    "emptyTitle": "Noch keine Gruppen",
+    "emptySubtitle": "Erstell eine Gruppe mit deinen Freunden.",
+    "createGroup": "Gruppe erstellen",
+    "memberCount": "{count, plural, one {# Mitglied} other {# Mitglieder}}",
+    "backToGroups": "Zurück zu Gruppen",
+    "newGroupTitle": "Neue Gruppe",
+    "groupName": "Gruppenname",
+    "groupNamePlaceholder": "z.B. WG-Freunde, Arbeitskollegen...",
+    "addMembers": "Mitglieder hinzufügen",
+    "noUsersAvailable": "Keine weiteren Nutzer verfügbar.",
+    "errorCreating": "Fehler beim Erstellen der Gruppe",
+    "leaderboard": "Rangliste",
+    "betHistory": "Wetten-History",
+    "noBets": "Noch keine abgeschlossenen Wetten.",
+    "you": "(Du)",
+    "pts": "Pkt.",
+    "lost": "Verloren",
+    "removeMember": "Entfernen",
+    "add": "Hinzufügen",
+    "nonMembers": "Hinzufügen"
+  }
+}

@@ -2,15 +2,9 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
-
-const navItems = [
-  { href: '/dashboard', label: 'Feed', icon: HomeIcon },
-  { href: '/bets/new', label: 'Wetten', icon: PlusIcon },
-  { href: '/friends', label: 'Freunde', icon: UsersIcon },
-  { href: '/leaderboard', label: 'Rangliste', icon: TrophyIcon },
-  { href: '/profile', label: 'Profil', icon: UserIcon },
-]
+import { LanguageToggle } from '@/components/language-toggle'
 
 function HomeIcon({ className }: { className?: string }) {
   return (
@@ -62,12 +56,33 @@ function UserIcon({ className }: { className?: string }) {
   )
 }
 
+function GroupsIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="7" width="20" height="14" rx="2"/>
+      <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+      <line x1="12" y1="12" x2="12" y2="16"/>
+      <line x1="10" y1="14" x2="14" y2="14"/>
+    </svg>
+  )
+}
+
 interface NavBarProps {
   unreadCount?: number
 }
 
 export function NavBar({ unreadCount = 0 }: NavBarProps) {
   const pathname = usePathname()
+  const t = useTranslations('nav')
+
+  const navItems = [
+    { href: '/dashboard', label: t('feed'), icon: HomeIcon },
+    { href: '/bets/new', label: t('bets'), icon: PlusIcon },
+    { href: '/friends', label: t('friends'), icon: UsersIcon },
+    { href: '/groups', label: t('groups'), icon: GroupsIcon },
+    { href: '/leaderboard', label: t('leaderboard'), icon: TrophyIcon },
+    { href: '/profile', label: t('profile'), icon: UserIcon },
+  ]
 
   return (
     <>
@@ -93,7 +108,7 @@ export function NavBar({ unreadCount = 0 }: NavBarProps) {
                 >
                   <Icon className="w-4 h-4" />
                   {label}
-                  {label === 'Feed' && unreadCount > 0 && (
+                  {href === '/dashboard' && unreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                       {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
@@ -101,6 +116,7 @@ export function NavBar({ unreadCount = 0 }: NavBarProps) {
                 </Link>
               )
             })}
+            <LanguageToggle />
           </nav>
         </div>
       </header>
@@ -121,7 +137,7 @@ export function NavBar({ unreadCount = 0 }: NavBarProps) {
               >
                 <Icon className="w-5 h-5" />
                 <span className="text-[10px] font-medium">{label}</span>
-                {label === 'Feed' && unreadCount > 0 && (
+                {href === '/dashboard' && unreadCount > 0 && (
                   <span className="absolute top-0 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>

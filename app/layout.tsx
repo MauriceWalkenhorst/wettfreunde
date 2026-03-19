@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages, getLocale } from 'next-intl/server'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -7,11 +9,16 @@ export const metadata: Metadata = {
   description: 'Wette mit deinen Freunden.',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale()
+  const messages = await getMessages()
+
   return (
-    <html lang="de" className={GeistSans.variable}>
+    <html lang={locale} className={GeistSans.variable}>
       <body className="min-h-screen bg-zinc-50 font-sans antialiased">
-        {children}
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   )

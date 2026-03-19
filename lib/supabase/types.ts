@@ -252,6 +252,48 @@ export type Database = {
         }
         Relationships: []
       }
+      groups: {
+        Row: {
+          id: string
+          name: string
+          created_by: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          created_by: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          created_by?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      group_members: {
+        Row: {
+          id: string
+          group_id: string
+          user_id: string
+          joined_at: string
+        }
+        Insert: {
+          id?: string
+          group_id: string
+          user_id: string
+          joined_at?: string
+        }
+        Update: {
+          id?: string
+          group_id?: string
+          user_id?: string
+          joined_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -279,4 +321,11 @@ export type BetWithDetails = Bet & {
   subject: Profile
   creator: Profile
   participants: (BetParticipant & { user: Profile })[]
+}
+
+export type Group = Database['public']['Tables']['groups']['Row']
+export type GroupMember = Database['public']['Tables']['group_members']['Row']
+export type GroupWithMembers = Group & {
+  members: (GroupMember & { user: Profile })[]
+  creator: Profile
 }

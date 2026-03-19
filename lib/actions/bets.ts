@@ -139,7 +139,8 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
       .eq('id', p.id)
 
     if (won) {
-      await supabase.rpc('increment_points', {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase as any).rpc('increment_points', {
         target_user_id: p.user_id,
         amount: 10,
       })

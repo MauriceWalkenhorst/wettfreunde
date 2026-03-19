@@ -9,6 +9,7 @@ import { formatRelativeTime } from '@/lib/utils'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Profile } from '@/lib/supabase/types'
+import { getTranslations } from 'next-intl/server'
 
 type BetPhoto = {
   id: string
@@ -25,14 +26,16 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const bet = await getBetById(id)
+  const [bet, t] = await Promise.all([
+    getBetById(id),
+    getTranslations('betDetail'),
+  ])
   if (!bet) notFound()
 
   const isSubject = bet.subject_id === user.id
   const myParticipation = bet.participants.find((p) => p.user_id === user.id) ?? null
   const isInvolved = isSubject || myParticipation !== null
 
-  // Get proof photo URL if exists
   let proofPhotoUrl: string | null = null
   if (bet.proof_photo_path) {
     const { data } = await supabase.storage
@@ -41,7 +44,6 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
     proofPhotoUrl = data?.signedUrl ?? null
   }
 
-  // Get bet photos uploaded by participants
   const { data: betPhotosRaw } = await supabase
     .from('bet_photos')
     .select('*, uploader:profiles(*)')
@@ -50,7 +52,6 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
 
   const betPhotos = (betPhotosRaw ?? []) as unknown as BetPhoto[]
 
-  // Get signed URLs for all bet photos
   const betPhotoUrls = await Promise.all(
     betPhotos.map(async (p) => {
       const { data } = await supabase.storage
@@ -60,11 +61,16 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
     })
   )
 
+  const statusLabel =
+    bet.status === 'answered' ? t('resolved') :
+    bet.status === 'expired' ? t('expired') :
+    t('open')
+
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div>
         <Link href="/dashboard" className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors">
-          Zurück zum Feed
+          {t('backToFeed')}
         </Link>
       </div>
 
@@ -72,12 +78,12 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-1">
-            <p className="text-xs text-zinc-400 uppercase tracking-wide font-medium">Die Frage</p>
+            <p className="text-xs text-zinc-400 uppercase tracking-wide font-medium">{t('theQuestion')}</p>
             <h1 className="text-xl font-bold text-zinc-900 leading-snug">{bet.question}</h1>
-            <p className="text-sm text-zinc-500">Einsatz: <strong>{bet.stake}</strong></p>
+            <p className="text-sm text-zinc-500">{t('stake')} <strong>{bet.stake}</strong></p>
           </div>
           <Badge variant={bet.status === 'answered' ? 'success' : bet.status === 'expired' ? 'danger' : 'warning'}>
-            {bet.status === 'answered' ? 'Aufgelöst' : bet.status === 'expired' ? 'Abgelaufen' : 'Offen'}
+            {statusLabel}
           </Badge>
         </div>
 
@@ -85,12 +91,12 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
         <div className="flex items-center gap-3 p-3 bg-zinc-50 rounded-xl">
           <Avatar src={bet.subject.avatar_url} name={bet.subject.display_name} size="md" />
           <div>
-            <p className="text-xs text-zinc-500">Befragt wird</p>
+            <p className="text-xs text-zinc-500">{t('askedIs')}</p>
             <p className="text-sm font-semibold text-zinc-900">{bet.subject.display_name}</p>
           </div>
           {bet.status === 'answered' && (
             <div className="ml-auto text-right">
-              <p className="text-xs text-zinc-500">Antwort</p>
+              <p className="text-xs text-zinc-500">{t('answer')}</p>
               <p className="text-lg font-bold">{bet.subject_answer ? '✅ Ja' : '❌ Nein'}</p>
             </div>
           )}
@@ -99,10 +105,10 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
         {/* Subject proof photo */}
         {proofPhotoUrl && (
           <div className="space-y-2">
-            <p className="text-xs text-zinc-500 font-medium uppercase tracking-wide">Beweis vom Befragten</p>
+            <p className="text-xs text-zinc-500 font-medium uppercase tracking-wide">{t('proofFromSubject')}</p>
             <Image
               src={proofPhotoUrl}
-              alt="Beweis"
+              alt={t('proofFromSubject')}
               width={600}
               height={400}
               className="w-full rounded-xl object-cover max-h-64"
@@ -112,25 +118,25 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
 
         {/* Participants */}
         <div className="space-y-2">
-          <p className="text-xs text-zinc-500 uppercase tracking-wide font-medium">Wetter</p>
+          <p className="text-xs text-zinc-500 uppercase tracking-wide font-medium">{t('bettors')}</p>
           <div className="space-y-2">
             {bet.participants.map((p) => (
               <div key={p.id} className="flex items-center gap-3">
                 <Avatar src={p.user.avatar_url} name={p.user.display_name} size="sm" />
                 <span className="flex-1 text-sm font-medium text-zinc-900">
                   {p.user.display_name}
-                  {p.user_id === user.id && ' (Du)'}
+                  {p.user_id === user.id && ` ${t('you')}`}
                 </span>
                 {p.side !== null && (
                   <span className="text-sm">{p.side ? '✅ Ja' : '❌ Nein'}</span>
                 )}
                 {p.won !== null && (
                   <Badge variant={p.won ? 'success' : 'danger'}>
-                    {p.won ? `+${p.points_awarded} Pkt.` : 'Verloren'}
+                    {p.won ? `+${p.points_awarded} ${t('pts')}` : t('lost')}
                   </Badge>
                 )}
                 {p.side === null && bet.status === 'pending' && (
-                  <Badge variant="default">Noch nicht gewählt</Badge>
+                  <Badge variant="default">{t('notChosenYet')}</Badge>
                 )}
               </div>
             ))}
@@ -138,7 +144,7 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
         </div>
 
         <p className="text-xs text-zinc-400">
-          Erstellt von {bet.creator.display_name} · {formatRelativeTime(bet.created_at)}
+          {t('createdBy', { creator: bet.creator.display_name, time: formatRelativeTime(bet.created_at) })}
         </p>
       </div>
 
@@ -154,12 +160,12 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
       {/* Participant proof photos */}
       {betPhotoUrls.length > 0 && (
         <div className="space-y-3">
-          <p className="text-sm font-semibold text-zinc-700">Beweis-Fotos</p>
+          <p className="text-sm font-semibold text-zinc-700">{t('proofPhotos')}</p>
           {betPhotoUrls.map((p) => p.url && (
             <div key={p.id} className="bg-white rounded-2xl border border-zinc-200 overflow-hidden">
               <Image
                 src={p.url}
-                alt="Beweis"
+                alt={t('proofPhotos')}
                 width={600}
                 height={400}
                 className="w-full object-cover max-h-64"

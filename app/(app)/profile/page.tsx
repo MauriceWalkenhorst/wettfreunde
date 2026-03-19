@@ -4,6 +4,8 @@ import { signOut } from '@/lib/actions/auth'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Profile } from '@/lib/supabase/types'
+import { getTranslations, getLocale } from 'next-intl/server'
+import { LanguageToggle } from '@/components/language-toggle'
 
 export default async function ProfilePage() {
   const supabase = await createClient()
@@ -19,7 +21,6 @@ export default async function ProfilePage() {
   const profile = profileResult.data as Profile | null
   if (!profile) return null
 
-  // Get bet stats
   const participationsResult = await supabase
     .from('bet_participants')
     .select('won, points_awarded')
@@ -32,9 +33,11 @@ export default async function ProfilePage() {
   const wonBets = finished.filter((p) => p.won).length
   const winRate = totalBets > 0 ? Math.round((wonBets / totalBets) * 100) : 0
 
+  const [t, locale] = await Promise.all([getTranslations('profile'), getLocale()])
+
   return (
     <div className="space-y-6 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold text-zinc-900">Profil</h1>
+      <h1 className="text-2xl font-bold text-zinc-900">{t('title')}</h1>
 
       <div className="bg-white rounded-2xl border border-zinc-200 p-6 space-y-4">
         <div className="flex items-center gap-4">
@@ -48,35 +51,40 @@ export default async function ProfilePage() {
         <div className="grid grid-cols-3 gap-3 pt-2">
           <div className="bg-zinc-50 rounded-xl p-3 text-center">
             <div className="text-2xl font-bold text-zinc-900">{profile.points}</div>
-            <div className="text-xs text-zinc-500 mt-0.5">Punkte</div>
+            <div className="text-xs text-zinc-500 mt-0.5">{t('points')}</div>
           </div>
           <div className="bg-zinc-50 rounded-xl p-3 text-center">
             <div className="text-2xl font-bold text-zinc-900">{wonBets}</div>
-            <div className="text-xs text-zinc-500 mt-0.5">Gewonnen</div>
+            <div className="text-xs text-zinc-500 mt-0.5">{t('won')}</div>
           </div>
           <div className="bg-zinc-50 rounded-xl p-3 text-center">
             <div className="text-2xl font-bold text-zinc-900">{winRate}%</div>
-            <div className="text-xs text-zinc-500 mt-0.5">Trefferquote</div>
+            <div className="text-xs text-zinc-500 mt-0.5">{t('winRate')}</div>
           </div>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-zinc-200 p-4">
         <div className="flex items-center justify-between py-1">
-          <span className="text-sm text-zinc-700">Auth-Anbieter</span>
+          <span className="text-sm text-zinc-700">{t('authProvider')}</span>
           <Badge variant="default">{user.app_metadata.provider ?? 'OAuth'}</Badge>
         </div>
         <div className="flex items-center justify-between py-1">
-          <span className="text-sm text-zinc-700">Mitglied seit</span>
+          <span className="text-sm text-zinc-700">{t('memberSince')}</span>
           <span className="text-sm text-zinc-500">
-            {new Date(profile.created_at).toLocaleDateString('de-DE')}
+            {new Date(profile.created_at).toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US')}
           </span>
         </div>
       </div>
 
+      <div className="bg-white rounded-2xl border border-zinc-200 p-4 flex items-center justify-between">
+        <span className="text-sm text-zinc-700">{t('language')}</span>
+        <LanguageToggle />
+      </div>
+
       <form action={signOut}>
         <Button type="submit" variant="danger" className="w-full">
-          Abmelden
+          {t('signOut')}
         </Button>
       </form>
     </div>
