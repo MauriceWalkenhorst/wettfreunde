@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatRelativeTime(date: string): string {
+export function formatRelativeTime(date: string, locale = 'de'): string {
   const now = new Date()
   const then = new Date(date)
   const diff = now.getTime() - then.getTime()
@@ -13,15 +13,17 @@ export function formatRelativeTime(date: string): string {
   const hours = Math.floor(minutes / 60)
   const days = Math.floor(hours / 24)
 
-  if (minutes < 1) return 'gerade eben'
-  if (minutes < 60) return `vor ${minutes} Min.`
-  if (hours < 24) return `vor ${hours} Std.`
-  if (days < 7) return `vor ${days} Tag${days === 1 ? '' : 'en'}`
-  return then.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' })
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
+
+  if (minutes < 1) return rtf.format(0, 'minutes')
+  if (minutes < 60) return rtf.format(-minutes, 'minutes')
+  if (hours < 24) return rtf.format(-hours, 'hours')
+  if (days < 7) return rtf.format(-days, 'days')
+  return then.toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US', { day: '2-digit', month: '2-digit', year: '2-digit' })
 }
 
-export function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('de-DE', {
+export function formatDate(date: string, locale = 'de'): string {
+  return new Date(date).toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',

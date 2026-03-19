@@ -8,9 +8,14 @@ export function RemoveMemberButton({ groupId, userId }: { groupId: string; userI
   const [isPending, startTransition] = useTransition()
   const t = useTranslations('groups')
 
+  function handleRemove() {
+    if (!window.confirm(t('removeConfirm'))) return
+    startTransition(() => removeGroupMember(groupId, userId))
+  }
+
   return (
     <button
-      onClick={() => startTransition(() => removeGroupMember(groupId, userId))}
+      onClick={handleRemove}
       disabled={isPending}
       className="w-6 h-6 rounded-full bg-zinc-200 hover:bg-red-100 hover:text-red-600 flex items-center justify-center text-zinc-500 transition-colors text-xs disabled:opacity-50"
       title={t('removeMember')}

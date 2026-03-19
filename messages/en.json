@@ -72,7 +72,9 @@
     "lost": "Lost",
     "notChosenYet": "Not chosen yet",
     "createdBy": "Created by {creator} · {time}",
-    "proofPhotos": "Proof Photos"
+    "proofPhotos": "Proof Photos",
+    "yes": "Yes",
+    "no": "No"
   },
   "betForm": {
     "stepIndicator": "Step {current} of {total} — {label}",
@@ -112,7 +114,9 @@
     "bettingOn": "Betting on",
     "answer": "Answer:",
     "points": "+{n} Points",
-    "lost": "Lost"
+    "lost": "Lost",
+    "yes": "Yes",
+    "no": "No"
   },
   "betResolution": {
     "subjectPrompt": "That's you! What's your answer?",
@@ -147,7 +151,21 @@
   },
   "addFriend": {
     "friendStatus": "Friends",
+    "pending": "Request sent",
     "add": "+ Add"
+  },
+  "betPhotoUpload": {
+    "title": "Upload Proof Photo",
+    "done": "✓ Photo uploaded!",
+    "error": "Error uploading",
+    "preview": "Preview",
+    "caption": "Caption (optional)",
+    "changePhoto": "Change Photo",
+    "upload": "Upload",
+    "photoButton": "📷 Take or choose a photo"
+  },
+  "friendPicker": {
+    "noFriends": "No users yet. Invite some friends first."
   },
   "groups": {
     "title": "Groups",
@@ -171,7 +189,10 @@
     "pts": "Pts.",
     "lost": "Lost",
     "removeMember": "Remove",
+    "removeConfirm": "Really remove this member?",
     "add": "Add",
-    "nonMembers": "Add Members"
+    "nonMembers": "Add Members",
+    "yes": "Yes",
+    "no": "No"
   }
 }

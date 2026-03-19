@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { useTranslations } from 'next-intl'
 import { uploadBetPhoto } from '@/lib/actions/bets'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
@@ -11,6 +12,7 @@ interface BetPhotoUploadProps {
 
 export function BetPhotoUpload({ betId }: BetPhotoUploadProps) {
   const router = useRouter()
+  const t = useTranslations('betPhotoUpload')
   const fileRef = useRef<HTMLInputElement>(null)
   const [photo, setPhoto] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
@@ -35,7 +37,7 @@ export function BetPhotoUpload({ betId }: BetPhotoUploadProps) {
       setDone(true)
       router.refresh()
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Fehler beim Hochladen')
+      setError(e instanceof Error ? e.message : t('error'))
       setLoading(false)
     }
   }
@@ -43,14 +45,14 @@ export function BetPhotoUpload({ betId }: BetPhotoUploadProps) {
   if (done) {
     return (
       <div className="text-center py-4 text-sm text-green-600 font-medium">
-        ✓ Foto hochgeladen!
+        {t('done')}
       </div>
     )
   }
 
   return (
     <div className="space-y-3 bg-zinc-50 border border-zinc-200 rounded-2xl p-4">
-      <p className="text-sm font-medium text-zinc-900">Beweis-Foto hochladen</p>
+      <p className="text-sm font-medium text-zinc-900">{t('title')}</p>
 
       <input
         ref={fileRef}
@@ -64,20 +66,20 @@ export function BetPhotoUpload({ betId }: BetPhotoUploadProps) {
       {preview ? (
         <div className="space-y-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={preview} alt="Vorschau" className="w-full rounded-xl object-cover max-h-48" />
+          <img src={preview} alt={t('preview')} className="w-full rounded-xl object-cover max-h-48" />
           <input
             type="text"
-            placeholder="Beschreibung (optional)"
+            placeholder={t('caption')}
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
             className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-zinc-900"
           />
           <div className="flex gap-2">
             <Button size="sm" variant="secondary" onClick={() => { setPhoto(null); setPreview(null) }} className="flex-1">
-              Anderes Foto
+              {t('changePhoto')}
             </Button>
             <Button size="sm" onClick={handleUpload} loading={loading} className="flex-1">
-              Hochladen
+              {t('upload')}
             </Button>
           </div>
         </div>
@@ -87,7 +89,7 @@ export function BetPhotoUpload({ betId }: BetPhotoUploadProps) {
           onClick={() => fileRef.current?.click()}
           className="w-full rounded-xl border-2 border-dashed border-zinc-300 py-6 text-sm text-zinc-500 hover:border-zinc-400 transition-colors text-center"
         >
-          📷 Foto aufnehmen oder auswählen
+          {t('photoButton')}
         </button>
       )}
 

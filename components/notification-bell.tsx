@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { Notification } from '@/lib/supabase/types'
 import { formatRelativeTime } from '@/lib/utils'
 import { markNotificationRead, markAllNotificationsRead } from '@/lib/actions/notifications'
@@ -15,6 +15,7 @@ export function NotificationBell({ notifications }: NotificationBellProps) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const t = useTranslations('notifications')
+  const locale = useLocale()
   const unread = notifications.filter((n) => !n.read)
 
   async function handleNotificationClick(n: Notification) {
@@ -80,7 +81,7 @@ export function NotificationBell({ notifications }: NotificationBellProps) {
                       <div className={`flex-1 min-w-0 ${n.read ? 'pl-5' : ''}`}>
                         <p className="text-sm font-medium text-zinc-900 leading-snug">{n.title}</p>
                         {n.body && <p className="text-xs text-zinc-500 mt-0.5 line-clamp-2">{n.body}</p>}
-                        <p className="text-[11px] text-zinc-400 mt-1">{formatRelativeTime(n.created_at)}</p>
+                        <p className="text-[11px] text-zinc-400 mt-1">{formatRelativeTime(n.created_at, locale)}</p>
                       </div>
                     </div>
                   </button>

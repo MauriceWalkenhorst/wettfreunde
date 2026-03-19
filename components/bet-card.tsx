@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { BetWithDetails } from '@/lib/supabase/types'
 import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -14,6 +14,7 @@ interface BetCardProps {
 
 export function BetCard({ bet, currentUserId }: BetCardProps) {
   const t = useTranslations('betCard')
+  const locale = useLocale()
   const myParticipation = bet.participants.find((p) => p.user_id === currentUserId)
   const isSubject = bet.subject_id === currentUserId
 
@@ -62,13 +63,13 @@ export function BetCard({ bet, currentUserId }: BetCardProps) {
           <Avatar src={bet.subject.avatar_url} name={bet.subject.display_name} size="sm" />
           <span className="text-xs text-zinc-600 font-medium">{bet.subject.display_name}</span>
         </div>
-        <span className="text-xs text-zinc-400">{formatRelativeTime(bet.created_at)}</span>
+        <span className="text-xs text-zinc-400">{formatRelativeTime(bet.created_at, locale)}</span>
       </div>
 
       {bet.status === 'answered' && (
         <div className="mt-3 pt-3 border-t border-zinc-100 flex items-center gap-2">
           <span className="text-sm">
-            {t('answer')} <strong>{bet.subject_answer ? 'Ja' : 'Nein'}</strong>
+            {t('answer')} <strong>{bet.subject_answer ? t('yes') : t('no')}</strong>
           </span>
           {myParticipation?.won != null && (
             <Badge variant={myParticipation.won ? 'success' : 'danger'}>

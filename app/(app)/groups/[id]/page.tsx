@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getGroupById, getGroupBets } from '@/lib/queries/groups'
 import { getAllUsers } from '@/lib/queries/friends'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, getLocale } from 'next-intl/server'
 import Link from 'next/link'
 import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -17,9 +17,10 @@ export default async function GroupDetailPage({ params }: { params: Promise<{ id
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const [group, t] = await Promise.all([
+  const [group, t, locale] = await Promise.all([
     getGroupById(id),
     getTranslations('groups'),
+    getLocale(),
   ])
   if (!group) notFound()
 
@@ -122,7 +123,7 @@ export default async function GroupDetailPage({ params }: { params: Promise<{ id
               >
                 <p className="font-medium text-zinc-900 leading-snug">{bet.question}</p>
                 <p className="text-sm text-zinc-500 mt-1">
-                  {bet.subject_answer ? '✅ Ja' : '❌ Nein'}
+                  {bet.subject_answer ? `✅ ${t('yes')}` : `❌ ${t('no')}`}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {bet.participants
@@ -133,13 +134,13 @@ export default async function GroupDetailPage({ params }: { params: Promise<{ id
                         <span className="text-xs text-zinc-700">{p.user.display_name}</span>
                         {p.won !== null && (
                           <Badge variant={p.won ? 'success' : 'danger'}>
-                            {p.won ? `+${p.points_awarded} Pkt.` : t('lost')}
+                            {p.won ? `+${p.points_awarded} ${t('pts')}` : t('lost')}
                           </Badge>
                         )}
                       </div>
                     ))}
                 </div>
-                <p className="text-xs text-zinc-400 mt-2">{formatRelativeTime(bet.created_at)}</p>
+                <p className="text-xs text-zinc-400 mt-2">{formatRelativeTime(bet.created_at, locale)}</p>
               </Link>
             ))}
           </div>

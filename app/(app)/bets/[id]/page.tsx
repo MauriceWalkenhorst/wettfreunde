@@ -9,7 +9,7 @@ import { formatRelativeTime } from '@/lib/utils'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Profile } from '@/lib/supabase/types'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, getLocale } from 'next-intl/server'
 
 type BetPhoto = {
   id: string
@@ -26,9 +26,10 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  const [bet, t] = await Promise.all([
+  const [bet, t, locale] = await Promise.all([
     getBetById(id),
     getTranslations('betDetail'),
+    getLocale(),
   ])
   if (!bet) notFound()
 
@@ -97,7 +98,7 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
           {bet.status === 'answered' && (
             <div className="ml-auto text-right">
               <p className="text-xs text-zinc-500">{t('answer')}</p>
-              <p className="text-lg font-bold">{bet.subject_answer ? '✅ Ja' : '❌ Nein'}</p>
+              <p className="text-lg font-bold">{bet.subject_answer ? `✅ ${t('yes')}` : `❌ ${t('no')}`}</p>
             </div>
           )}
         </div>
@@ -128,7 +129,7 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
                   {p.user_id === user.id && ` ${t('you')}`}
                 </span>
                 {p.side !== null && (
-                  <span className="text-sm">{p.side ? '✅ Ja' : '❌ Nein'}</span>
+                  <span className="text-sm">{p.side ? `✅ ${t('yes')}` : `❌ ${t('no')}`}</span>
                 )}
                 {p.won !== null && (
                   <Badge variant={p.won ? 'success' : 'danger'}>
@@ -144,7 +145,7 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
         </div>
 
         <p className="text-xs text-zinc-400">
-          {t('createdBy', { creator: bet.creator.display_name, time: formatRelativeTime(bet.created_at) })}
+          {t('createdBy', { creator: bet.creator.display_name, time: formatRelativeTime(bet.created_at, locale) })}
         </p>
       </div>
 

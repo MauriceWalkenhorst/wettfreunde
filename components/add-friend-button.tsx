@@ -19,6 +19,10 @@ export function AddFriendButton({ userId, status }: AddFriendButtonProps) {
     return <span className="text-xs text-zinc-400 font-medium">{t('friendStatus')}</span>
   }
 
+  if (status === 'pending') {
+    return <span className="text-xs text-zinc-400 font-medium italic">{t('pending')}</span>
+  }
+
   async function handleAdd() {
     setLoading(true)
     await sendFriendRequest(userId)

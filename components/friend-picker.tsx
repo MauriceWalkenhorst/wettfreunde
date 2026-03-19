@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { Profile } from '@/lib/supabase/types'
 import { Avatar } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
@@ -13,10 +14,12 @@ interface FriendPickerProps {
 }
 
 export function FriendPicker({ friends, selected, onToggle, label, singleSelect }: FriendPickerProps) {
+  const t = useTranslations('friendPicker')
+
   if (friends.length === 0) {
     return (
       <div className="text-sm text-zinc-500 py-4 text-center">
-        Noch keine Freunde. Lade zuerst Freunde ein.
+        {t('noFriends')}
       </div>
     )
   }
