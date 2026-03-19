@@ -123,22 +123,22 @@ export function NavBar({ unreadCount = 0 }: NavBarProps) {
 
       {/* Mobile bottom nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-t border-zinc-200">
-        <div className="flex items-center justify-around px-2 py-2">
+        <div className="flex items-center justify-around px-1 py-3">
           {navItems.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
             return (
               <Link
                 key={href}
                 href={href}
+                aria-label={label}
                 className={cn(
-                  'relative flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-colors min-w-0',
-                  isActive ? 'text-zinc-900' : 'text-zinc-400'
+                  'relative flex items-center justify-center w-10 h-10 rounded-xl transition-colors',
+                  isActive ? 'text-zinc-900 bg-zinc-100' : 'text-zinc-400 hover:text-zinc-600'
                 )}
               >
                 <Icon className="w-5 h-5" />
-                <span className="text-[10px] font-medium">{label}</span>
                 {href === '/dashboard' && unreadCount > 0 && (
-                  <span className="absolute top-0 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
