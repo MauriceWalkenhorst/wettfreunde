@@ -5,6 +5,8 @@ import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { BetResolution } from '@/components/bet-resolution'
 import { BetPhotoUpload } from '@/components/bet-photo-upload'
+import { DeleteBetButton } from '@/components/delete-bet-button'
+import { ShareBetButton } from '@/components/share-bet-button'
 import { formatRelativeTime } from '@/lib/utils'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -144,9 +146,31 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
           </div>
         </div>
 
-        <p className="text-xs text-zinc-400">
-          {t('createdBy', { creator: bet.creator.display_name, time: formatRelativeTime(bet.created_at, locale) })}
-        </p>
+        {/* Sides summary (pending only) */}
+        {bet.status === 'pending' && (() => {
+          const yesCount = bet.participants.filter((p) => p.side === true).length
+          const noCount = bet.participants.filter((p) => p.side === false).length
+          const openCount = bet.participants.filter((p) => p.side === null).length
+          return (
+            <div className="flex gap-4 text-sm text-zinc-500">
+              <span>✅ {t('sidesYes')} <strong className="text-zinc-800">{yesCount}</strong></span>
+              <span>❌ {t('sidesNo')} <strong className="text-zinc-800">{noCount}</strong></span>
+              {openCount > 0 && <span>⏳ {t('sidesOpen')} <strong className="text-zinc-800">{openCount}</strong></span>}
+            </div>
+          )
+        })()}
+
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <p className="text-xs text-zinc-400">
+            {t('createdBy', { creator: bet.creator.display_name, time: formatRelativeTime(bet.created_at, locale) })}
+          </p>
+          <div className="flex items-center gap-2">
+            <ShareBetButton />
+            {bet.created_by === user.id && bet.status === 'pending' && (
+              <DeleteBetButton betId={bet.id} />
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Resolution / Side picking */}

@@ -171,6 +171,25 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
   revalidatePath('/leaderboard')
 }
 
+export async function deleteBet(betId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Not authenticated')
+
+  const { data: bet } = await supabase
+    .from('bets')
+    .select('created_by, status')
+    .eq('id', betId)
+    .single()
+
+  if (!bet) throw new Error('Bet not found')
+  if ((bet as { created_by: string }).created_by !== user.id) throw new Error('Not authorized')
+  if ((bet as { status: string }).status !== 'pending') throw new Error('Cannot delete an answered bet')
+
+  await supabase.from('bets').delete().eq('id', betId)
+  revalidatePath('/dashboard')
+}
+
 export async function uploadBetPhoto(betId: string, photoFile: File, caption?: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

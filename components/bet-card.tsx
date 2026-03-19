@@ -25,6 +25,8 @@ export function BetCard({ bet, currentUserId }: BetCardProps) {
       ? t('awaitingAnswer')
       : myParticipation?.side === null
       ? t('pickSide')
+      : myParticipation?.side !== null
+      ? t('waitingForAnswer')
       : t('open')
 
   const statusVariant =

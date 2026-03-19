@@ -74,7 +74,14 @@
     "createdBy": "Erstellt von {creator} · {time}",
     "proofPhotos": "Beweis-Fotos",
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    "shareLink": "Link kopieren",
+    "linkCopied": "✓ Kopiert",
+    "deleteBet": "Wette löschen",
+    "deleteConfirm": "Wette wirklich löschen? Das kann nicht rückgängig gemacht werden.",
+    "sidesYes": "Ja",
+    "sidesNo": "Nein",
+    "sidesOpen": "Offen"
   },
   "betForm": {
     "stepIndicator": "Schritt {current} von {total} — {label}",
@@ -109,6 +116,7 @@
     "resolved": "Aufgelöst",
     "awaitingAnswer": "Deine Antwort gefragt",
     "pickSide": "Seite wählen",
+    "waitingForAnswer": "Warte auf Antwort",
     "open": "Offen",
     "stake": "Einsatz:",
     "bettingOn": "Wetten auf",

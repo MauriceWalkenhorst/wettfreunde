@@ -74,7 +74,14 @@
     "createdBy": "Created by {creator} · {time}",
     "proofPhotos": "Proof Photos",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "shareLink": "Copy link",
+    "linkCopied": "✓ Copied",
+    "deleteBet": "Delete Bet",
+    "deleteConfirm": "Really delete this bet? This cannot be undone.",
+    "sidesYes": "Yes",
+    "sidesNo": "No",
+    "sidesOpen": "Open"
   },
   "betForm": {
     "stepIndicator": "Step {current} of {total} — {label}",
@@ -109,6 +116,7 @@
     "resolved": "Resolved",
     "awaitingAnswer": "Your answer needed",
     "pickSide": "Pick side",
+    "waitingForAnswer": "Waiting for answer",
     "open": "Open",
     "stake": "Stake:",
     "bettingOn": "Betting on",
