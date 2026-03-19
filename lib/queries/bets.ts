@@ -47,14 +47,13 @@ export async function getBetsForUser(): Promise<{
     .map((b) => b.id)
 
   if (expiredIds.length > 0) {
-    await supabase
+    const { error: expireError } = await supabase
       .from('bets')
       .update({ status: 'expired' })
       .in('id', expiredIds)
-    // Update local bets array to reflect the new status
-    for (const b of bets) {
-      if (expiredIds.includes(b.id)) {
-        b.status = 'expired'
+    if (!expireError) {
+      for (const b of bets) {
+        if (expiredIds.includes(b.id)) b.status = 'expired'
       }
     }
   }

@@ -192,8 +192,7 @@
     "placeholder": "Write a comment...",
     "send": "Send",
     "empty": "No comments yet. Be the first!",
-    "deleteOwn": "Delete",
-    "noComment": ""
+    "deleteOwn": "Delete"
   },
   "groups": {
     "title": "Groups",
