@@ -135,6 +135,8 @@
     "confirmAnswer": "Confirm Answer",
     "pickSidePrompt": "Choose your side!",
     "confirmSide": "Confirm Side",
+    "declineButton": "Decline",
+    "declineConfirm": "Really decline this bet? All participants will be notified.",
     "error": "Error"
   },
   "notifications": {
@@ -201,6 +203,10 @@
     "add": "Add",
     "nonMembers": "Add Members",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "leaveGroup": "Leave Group",
+    "leaveConfirm": "Really leave this group?",
+    "deleteGroup": "Delete Group",
+    "deleteConfirm": "Really delete this group? This cannot be undone."
   }
 }

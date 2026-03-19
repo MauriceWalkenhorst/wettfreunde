@@ -171,6 +171,42 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
   revalidatePath('/leaderboard')
 }
 
+export async function declineBet(betId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Not authenticated')
+
+  const { data: bet } = await supabase
+    .from('bets')
+    .select('subject_id, status, bet_participants(user_id)')
+    .eq('id', betId)
+    .single()
+
+  if (!bet) throw new Error('Bet not found')
+  if ((bet as { subject_id: string }).subject_id !== user.id) throw new Error('Not authorized')
+  if ((bet as { status: string }).status !== 'pending') throw new Error('Bet already resolved')
+
+  await supabase.from('bets').update({ status: 'expired' }).eq('id', betId)
+
+  type Row = { user_id: string }
+  const participantUserIds = (bet as { bet_participants: Row[] }).bet_participants.map((p) => p.user_id)
+
+  if (participantUserIds.length > 0) {
+    await supabase.from('notifications').insert(
+      participantUserIds.map((uid) => ({
+        user_id: uid,
+        type: 'bet_result' as const,
+        title: 'Wette abgelehnt',
+        body: 'Die befragte Person hat die Wette abgelehnt.',
+        ref_id: betId,
+      }))
+    )
+  }
+
+  revalidatePath(`/bets/${betId}`)
+  revalidatePath('/dashboard')
+}
+
 export async function deleteBet(betId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

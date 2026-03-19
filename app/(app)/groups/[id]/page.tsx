@@ -8,6 +8,7 @@ import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { formatRelativeTime } from '@/lib/utils'
 import { RemoveMemberButton, AddMemberButton } from '@/components/group-member-actions'
+import { LeaveGroupButton, DeleteGroupButton } from '@/components/group-actions'
 
 const medals = ['🥇', '🥈', '🥉']
 
@@ -46,7 +47,13 @@ export default async function GroupDetailPage({ params }: { params: Promise<{ id
         </Link>
         <div className="flex items-center justify-between mt-2">
           <h1 className="text-2xl font-bold text-zinc-900">{group.name}</h1>
-          <span className="text-sm text-zinc-500">{t('memberCount', { count: group.members.length })}</span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-zinc-500">{t('memberCount', { count: group.members.length })}</span>
+            {isCreator
+              ? <DeleteGroupButton groupId={group.id} />
+              : <LeaveGroupButton groupId={group.id} />
+            }
+          </div>
         </div>
       </div>
 

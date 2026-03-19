@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
-import { answerBet, pickSide } from '@/lib/actions/bets'
+import { answerBet, pickSide, declineBet } from '@/lib/actions/bets'
 import { cn } from '@/lib/utils'
 
 interface BetResolutionProps {
@@ -37,6 +37,19 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
     setError(null)
     try {
       await answerBet(betId, selectedAnswer, photo ?? undefined)
+      router.refresh()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : t('error'))
+      setLoading(false)
+    }
+  }
+
+  async function handleDecline() {
+    if (!window.confirm(t('declineConfirm'))) return
+    setLoading(true)
+    setError(null)
+    try {
+      await declineBet(betId)
       router.refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : t('error'))
@@ -125,6 +138,14 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
         <Button onClick={handleAnswer} disabled={selectedAnswer === null} loading={loading} className="w-full">
           {t('confirmAnswer')}
         </Button>
+        <button
+          type="button"
+          onClick={handleDecline}
+          disabled={loading}
+          className="w-full text-center text-xs text-zinc-400 hover:text-red-500 transition-colors py-1"
+        >
+          {t('declineButton')}
+        </button>
       </div>
     )
   }

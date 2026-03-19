@@ -201,7 +201,7 @@ export default async function BetDetailPage({ params }: { params: Promise<{ id: 
                   <p className="text-xs font-medium text-zinc-900">{p.uploader.display_name}</p>
                   {p.caption && <p className="text-xs text-zinc-500 truncate">{p.caption}</p>}
                 </div>
-                <span className="text-xs text-zinc-400">{formatRelativeTime(p.created_at)}</span>
+                <span className="text-xs text-zinc-400">{formatRelativeTime(p.created_at, locale)}</span>
               </div>
             </div>
           ))}

@@ -25,6 +25,8 @@ export function NotificationBell({ notifications }: NotificationBellProps) {
     setOpen(false)
     if (n.ref_id && (n.type === 'bet_request' || n.type === 'bet_result')) {
       router.push(`/bets/${n.ref_id}`)
+    } else if (n.type === 'friend_request' || n.type === 'friend_accepted') {
+      router.push('/friends')
     }
   }
 

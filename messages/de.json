@@ -135,6 +135,8 @@
     "confirmAnswer": "Antwort bestätigen",
     "pickSidePrompt": "Wähle deine Seite!",
     "confirmSide": "Seite bestätigen",
+    "declineButton": "Ablehnen",
+    "declineConfirm": "Wette wirklich ablehnen? Alle Teilnehmer werden benachrichtigt.",
     "error": "Fehler"
   },
   "notifications": {
@@ -201,6 +203,10 @@
     "add": "Hinzufügen",
     "nonMembers": "Hinzufügen",
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    "leaveGroup": "Gruppe verlassen",
+    "leaveConfirm": "Gruppe wirklich verlassen?",
+    "deleteGroup": "Gruppe löschen",
+    "deleteConfirm": "Gruppe wirklich löschen? Das kann nicht rückgängig gemacht werden."
   }
 }
