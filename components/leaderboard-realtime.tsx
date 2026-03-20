@@ -31,7 +31,7 @@ export function LeaderboardRealtime({ profiles: initialProfiles, currentUserId }
       )
       .subscribe()
 
-    return () => { supabase.removeChannel(channel) }
+    return () => { channel.unsubscribe(); supabase.removeChannel(channel) }
   }, [])
 
   return <LeaderboardTable profiles={profiles} currentUserId={currentUserId} />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { uploadBetPhoto } from '@/lib/actions/bets'
 import { Button } from '@/components/ui/button'
@@ -20,6 +20,10 @@ export function BetPhotoUpload({ betId }: BetPhotoUploadProps) {
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    return () => { if (preview) URL.revokeObjectURL(preview) }
+  }, [preview])
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]

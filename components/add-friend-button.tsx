@@ -14,6 +14,7 @@ export function AddFriendButton({ userId, status }: AddFriendButtonProps) {
   const t = useTranslations('addFriend')
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   if (status === 'accepted' || done) {
     return <span className="text-xs text-zinc-400 font-medium">{t('friendStatus')}</span>
@@ -24,15 +25,25 @@ export function AddFriendButton({ userId, status }: AddFriendButtonProps) {
   }
 
   async function handleAdd() {
+    if (loading) return
     setLoading(true)
-    await sendFriendRequest(userId)
-    setDone(true)
-    setLoading(false)
+    setError(null)
+    try {
+      await sendFriendRequest(userId)
+      setDone(true)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : t('error'))
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <Button size="sm" variant="secondary" onClick={handleAdd} loading={loading}>
-      {t('add')}
-    </Button>
+    <div>
+      <Button size="sm" variant="secondary" onClick={handleAdd} loading={loading}>
+        {t('add')}
+      </Button>
+      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+    </div>
   )
 }

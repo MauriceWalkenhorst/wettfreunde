@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
@@ -25,6 +25,10 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
   const [celebrating, setCelebrating] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+    return () => { if (photoPreview) URL.revokeObjectURL(photoPreview) }
+  }, [photoPreview])
+
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
@@ -33,13 +37,14 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
   }
 
   async function handleAnswer() {
-    if (selectedAnswer === null) return
+    if (selectedAnswer === null || loading) return
     setLoading(true)
     setError(null)
     try {
       await answerBet(betId, selectedAnswer, photo ?? undefined)
       setCelebrating(true)
-      setTimeout(() => router.refresh(), 2500)
+      const timer = setTimeout(() => router.refresh(), 2500)
+      return () => clearTimeout(timer)
     } catch (e) {
       setError(e instanceof Error ? e.message : t('error'))
       setLoading(false)

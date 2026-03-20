@@ -108,7 +108,9 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
   let proofPhotoPath: string | null = null
 
   if (photoFile) {
-    const ext = photoFile.name.split('.').pop()
+    const VALID_EXTS = ['jpg', 'jpeg', 'png', 'webp']
+    const ext = photoFile.name.split('.').pop()?.toLowerCase()
+    if (!ext || !VALID_EXTS.includes(ext)) throw new Error('Ungültiger Dateityp')
     const path = `${betId}/subject-${Date.now()}.${ext}`
     const arrayBuffer = await photoFile.arrayBuffer()
     const { data: uploadData, error: uploadError } = await supabase.storage
@@ -118,7 +120,7 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
     proofPhotoPath = uploadData.path
   }
 
-  await supabase
+  const { error: updateError } = await supabase
     .from('bets')
     .update({
       subject_answer: answer,
@@ -127,6 +129,7 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
       proof_photo_path: proofPhotoPath,
     })
     .eq('id', betId)
+  if (updateError) throw new Error(updateError.message)
 
   type ParticipantRow = { id: string; user_id: string; side: boolean | null }
   const participants = (bet as { bet_participants: ParticipantRow[] }).bet_participants
