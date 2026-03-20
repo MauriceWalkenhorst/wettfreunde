@@ -14,8 +14,12 @@ export function DeleteBetButton({ betId }: { betId: string }) {
   function handleDelete() {
     if (!window.confirm(t('deleteConfirm'))) return
     startTransition(async () => {
-      await deleteBet(betId)
-      router.push('/dashboard')
+      try {
+        await deleteBet(betId)
+        router.push('/dashboard')
+      } catch (err) {
+        alert(err instanceof Error ? err.message : t('deleteError'))
+      }
     })
   }
 
