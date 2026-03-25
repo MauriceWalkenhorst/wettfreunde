@@ -3,6 +3,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
+const VALID_PHOTO_EXTS = ['jpg', 'jpeg', 'png', 'webp']
+
 interface CreateBetInput {
   question: string
   stake: string
@@ -108,9 +110,8 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
   let proofPhotoPath: string | null = null
 
   if (photoFile) {
-    const VALID_EXTS = ['jpg', 'jpeg', 'png', 'webp']
     const ext = photoFile.name.split('.').pop()?.toLowerCase()
-    if (!ext || !VALID_EXTS.includes(ext)) throw new Error('Ungültiger Dateityp')
+    if (!ext || !VALID_PHOTO_EXTS.includes(ext)) throw new Error('Ungültiger Dateityp')
     const path = `${betId}/subject-${Date.now()}.${ext}`
     const arrayBuffer = await photoFile.arrayBuffer()
     const { data: uploadData, error: uploadError } = await supabase.storage
@@ -246,9 +247,8 @@ export async function uploadBetPhoto(betId: string, photoFile: File, caption?: s
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
-  const VALID_EXTS = ['jpg', 'jpeg', 'png', 'webp']
   const ext = photoFile.name.split('.').pop()?.toLowerCase()
-  if (!ext || !VALID_EXTS.includes(ext)) throw new Error('Ungültiger Dateityp')
+  if (!ext || !VALID_PHOTO_EXTS.includes(ext)) throw new Error('Ungültiger Dateityp')
   const path = `${betId}/proof-${user.id}-${Date.now()}.${ext}`
   const arrayBuffer = await photoFile.arrayBuffer()
 
