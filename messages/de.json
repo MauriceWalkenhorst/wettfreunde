@@ -173,7 +173,8 @@
   "addFriend": {
     "friendStatus": "Befreundet",
     "pending": "Anfrage gesendet",
-    "add": "+ Hinzufügen"
+    "add": "+ Hinzufügen",
+    "error": "Freundschaftsanfrage fehlgeschlagen."
   },
   "betPhotoUpload": {
     "title": "Beweis-Foto hochladen",

@@ -173,7 +173,8 @@
   "addFriend": {
     "friendStatus": "Friends",
     "pending": "Request sent",
-    "add": "+ Add"
+    "add": "+ Add",
+    "error": "Friend request failed."
   },
   "betPhotoUpload": {
     "title": "Upload Proof Photo",

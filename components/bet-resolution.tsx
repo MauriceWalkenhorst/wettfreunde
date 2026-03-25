@@ -24,10 +24,15 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
   const [error, setError] = useState<string | null>(null)
   const [celebrating, setCelebrating] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     return () => { if (photoPreview) URL.revokeObjectURL(photoPreview) }
   }, [photoPreview])
+
+  useEffect(() => {
+    return () => { if (timerRef.current) clearTimeout(timerRef.current) }
+  }, [])
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -43,8 +48,7 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
     try {
       await answerBet(betId, selectedAnswer, photo ?? undefined)
       setCelebrating(true)
-      const timer = setTimeout(() => router.refresh(), 2500)
-      return () => clearTimeout(timer)
+      timerRef.current = setTimeout(() => router.refresh(), 2500)
     } catch (e) {
       setError(e instanceof Error ? e.message : t('error'))
       setLoading(false)
