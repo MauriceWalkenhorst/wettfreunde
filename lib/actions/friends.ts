@@ -92,7 +92,17 @@ export async function acceptInvite(token: string): Promise<{ success: boolean; m
     await supabase.from('friendships').insert({ user_a: userA, user_b: userB, status: 'accepted' })
   }
 
-  await supabase.from('invite_links').update({ used_by: user.id }).eq('id', invite.id)
+  const { data: claimed, error: claimError } = await supabase
+    .from('invite_links')
+    .update({ used_by: user.id })
+    .eq('id', invite.id)
+    .is('used_by', null)          // Only succeeds if not yet used
+    .select('id')
+    .single()
+
+  if (claimError || !claimed) {
+    return { success: false, message: 'Dieser Einladungslink wurde bereits verwendet.' }
+  }
 
   const { data: currentProfile } = await supabase
     .from('profiles')
