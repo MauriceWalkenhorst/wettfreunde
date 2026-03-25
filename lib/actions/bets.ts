@@ -135,43 +135,12 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
   type ParticipantRow = { id: string; user_id: string; side: boolean | null }
   const participants = (bet as { bet_participants: ParticipantRow[] }).bet_participants
 
-  for (const p of participants) {
-    const won = p.side !== null ? p.side === answer : null
-    const points = won ? 10 : 0
-
-    const { error: partUpdateError } = await supabase
-      .from('bet_participants')
-      .update({ won, points_awarded: points })
-      .eq('id', p.id)
-    if (partUpdateError) throw new Error(`Participant update failed: ${partUpdateError.message}`)
-
-    if (won) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data: newStreak } = await (supabase as any).rpc('increment_points', {
-        target_user_id: p.user_id,
-        amount: 10,
-      })
-      if (typeof newStreak === 'number' && newStreak > 0 && newStreak % 3 === 0) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await (supabase as any).rpc('add_bonus_points', {
-          target_user_id: p.user_id,
-          amount: 5,
-        })
-        await supabase.from('notifications').insert({
-          user_id: p.user_id,
-          type: 'bet_result' as const,
-          title: '🔥 Streak-Bonus!',
-          body: `${newStreak}er-Streak! +5 Bonus-Punkte`,
-          ref_id: betId,
-        })
-      }
-    } else if (won === false) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase as any).rpc('reset_streak', {
-        target_user_id: p.user_id,
-      })
-    }
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error: resolveError } = await (supabase as any).rpc('resolve_bet_participants', {
+    p_bet_id: betId,
+    p_answer: answer,
+  })
+  if (resolveError) throw new Error(resolveError.message)
 
   const { data: subjectProfile } = await supabase
     .from('profiles')
