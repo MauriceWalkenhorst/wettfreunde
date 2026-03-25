@@ -139,10 +139,11 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
     const won = p.side !== null ? p.side === answer : null
     const points = won ? 10 : 0
 
-    await supabase
+    const { error: partUpdateError } = await supabase
       .from('bet_participants')
       .update({ won, points_awarded: points })
       .eq('id', p.id)
+    if (partUpdateError) throw new Error(`Participant update failed: ${partUpdateError.message}`)
 
     if (won) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
