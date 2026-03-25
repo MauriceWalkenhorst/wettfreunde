@@ -246,7 +246,9 @@ export async function uploadBetPhoto(betId: string, photoFile: File, caption?: s
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
-  const ext = photoFile.name.split('.').pop()
+  const VALID_EXTS = ['jpg', 'jpeg', 'png', 'webp']
+  const ext = photoFile.name.split('.').pop()?.toLowerCase()
+  if (!ext || !VALID_EXTS.includes(ext)) throw new Error('Ungültiger Dateityp')
   const path = `${betId}/proof-${user.id}-${Date.now()}.${ext}`
   const arrayBuffer = await photoFile.arrayBuffer()
 
