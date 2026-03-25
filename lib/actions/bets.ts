@@ -132,34 +132,12 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
     .eq('id', betId)
   if (updateError) throw new Error(updateError.message)
 
-  type ParticipantRow = { id: string; user_id: string; side: boolean | null }
-  const participants = (bet as { bet_participants: ParticipantRow[] }).bet_participants
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error: resolveError } = await (supabase as any).rpc('resolve_bet_participants', {
     p_bet_id: betId,
     p_answer: answer,
   })
   if (resolveError) throw new Error(resolveError.message)
-
-  const { data: subjectProfile } = await supabase
-    .from('profiles')
-    .select('display_name')
-    .eq('id', user.id)
-    .single()
-
-  const subjectName = (subjectProfile as { display_name: string } | null)?.display_name ?? 'Die befragte Person'
-  const allUserIds = participants.map((p) => p.user_id)
-
-  await supabase.from('notifications').insert(
-    allUserIds.map((uid) => ({
-      user_id: uid,
-      type: 'bet_result' as const,
-      title: 'Wette aufgelöst!',
-      body: `${subjectName} hat mit "${answer ? 'Ja' : 'Nein'}" geantwortet.`,
-      ref_id: betId,
-    }))
-  )
 
   revalidatePath(`/bets/${betId}`)
   revalidatePath('/dashboard')

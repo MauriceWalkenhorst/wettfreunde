@@ -52,6 +52,24 @@ begin
     elsif v_won = false then
       perform reset_streak(p.user_id);
     end if;
+
+    -- Personalized win/loss notification
+    insert into notifications (user_id, type, title, body, ref_id)
+    values (
+      p.user_id,
+      'bet_result',
+      case
+        when v_won then '✅ Gewonnen!'
+        when v_won = false then '❌ Verloren'
+        else '⏳ Wette aufgelöst'
+      end,
+      case
+        when v_won then '+' || v_points || ' Punkte!'
+        when v_won = false then 'Leider verloren.'
+        else 'Du hattest keine Seite gewählt.'
+      end,
+      p_bet_id
+    );
   end loop;
 end;
 $$;
