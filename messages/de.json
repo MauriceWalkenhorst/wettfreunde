@@ -83,6 +83,7 @@
     "deleteBet": "Wette löschen",
     "deleteConfirm": "Wette wirklich löschen? Das kann nicht rückgängig gemacht werden.",
     "deleteError": "Wette konnte nicht gelöscht werden.",
+    "cancel": "Abbrechen",
     "sidesYes": "Ja",
     "sidesNo": "Nein",
     "sidesOpen": "Offen",

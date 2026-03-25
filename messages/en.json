@@ -83,6 +83,7 @@
     "deleteBet": "Delete Bet",
     "deleteConfirm": "Really delete this bet? This cannot be undone.",
     "deleteError": "Failed to delete bet.",
+    "cancel": "Cancel",
     "sidesYes": "Yes",
     "sidesNo": "No",
     "sidesOpen": "Open",
