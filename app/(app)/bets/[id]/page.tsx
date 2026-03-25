@@ -1,6 +1,7 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { getBetById } from '@/lib/queries/bets'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { BetResolution } from '@/components/bet-resolution'
@@ -23,11 +24,30 @@ type BetPhoto = {
   uploader: Profile
 }
 
+export async function generateMetadata(
+  { params }: { params: Promise<{ id: string }> }
+): Promise<Metadata> {
+  const { id } = await params
+  const bet = await getBetById(id)
+  if (!bet) return { title: 'Wette nicht gefunden — Wettfreunde' }
+
+  return {
+    title: `${bet.question} — Wettfreunde`,
+    description: `Einsatz: ${bet.stake}`,
+    openGraph: {
+      title: `🎲 ${bet.question}`,
+      description: `Einsatz: ${bet.stake}`,
+      siteName: 'Wettfreunde',
+      type: 'website',
+    },
+  }
+}
+
 export default async function BetDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+  if (!user) redirect('/login')
 
   const [bet, t, locale] = await Promise.all([
     getBetById(id),
