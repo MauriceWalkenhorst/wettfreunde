@@ -6,11 +6,12 @@ import { Badge } from '@/components/ui/badge'
 import { Profile } from '@/lib/supabase/types'
 import { getTranslations, getLocale } from 'next-intl/server'
 import { LanguageToggle } from '@/components/language-toggle'
+import { redirect } from 'next/navigation'
 
 export default async function ProfilePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+  if (!user) redirect('/login')
 
   const profileResult = await supabase
     .from('profiles')
@@ -19,7 +20,7 @@ export default async function ProfilePage() {
     .single()
 
   const profile = profileResult.data as Profile | null
-  if (!profile) return null
+  if (!profile) redirect('/login')
 
   const participationsResult = await supabase
     .from('bet_participants')

@@ -6,11 +6,12 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { NotificationBell } from '@/components/notification-bell'
 import { getTranslations } from 'next-intl/server'
+import { redirect } from 'next/navigation'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+  if (!user) redirect('/login')
 
   const [{ open, active, finished }, notifications, t] = await Promise.all([
     getBetsForUser(),

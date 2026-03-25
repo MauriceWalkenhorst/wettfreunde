@@ -3,8 +3,14 @@ import { Avatar } from '@/components/ui/avatar'
 import { ShareInvite } from '@/components/share-invite'
 import { AddFriendButton } from '@/components/add-friend-button'
 import { getTranslations } from 'next-intl/server'
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 
 export default async function FriendsPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
   const [users, statuses, t] = await Promise.all([
     getAllUsers(),
     getFriendshipStatuses(),

@@ -2,11 +2,12 @@ import { createClient } from '@/lib/supabase/server'
 import { getLeaderboard } from '@/lib/queries/leaderboard'
 import { LeaderboardRealtime } from '@/components/leaderboard-realtime'
 import { getTranslations } from 'next-intl/server'
+import { redirect } from 'next/navigation'
 
 export default async function LeaderboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+  if (!user) redirect('/login')
 
   const [profiles, t] = await Promise.all([
     getLeaderboard(),

@@ -4,11 +4,12 @@ import { BetForm } from '@/components/bet-form'
 import Link from 'next/link'
 import { Profile } from '@/lib/supabase/types'
 import { getTranslations } from 'next-intl/server'
+import { redirect } from 'next/navigation'
 
 export default async function NewBetPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+  if (!user) redirect('/login')
 
   const [allUsers, profileResult, t] = await Promise.all([
     getAllUsers(),
@@ -17,7 +18,7 @@ export default async function NewBetPage() {
   ])
 
   const profileData = profileResult.data as Profile | null
-  if (!profileData) return null
+  if (!profileData) redirect('/login')
 
   return (
     <div className="space-y-6">

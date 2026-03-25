@@ -4,11 +4,12 @@ import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
+import { redirect } from 'next/navigation'
 
 export default async function GroupsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+  if (!user) redirect('/login')
 
   const [groups, t] = await Promise.all([getMyGroups(), getTranslations('groups')])
 
