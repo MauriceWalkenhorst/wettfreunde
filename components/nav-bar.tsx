@@ -87,9 +87,9 @@ export function NavBar({ unreadCount = 0 }: NavBarProps) {
   return (
     <>
       {/* Desktop top nav */}
-      <header className="hidden md:flex h-16 border-b border-zinc-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="hidden md:flex h-16 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-4xl mx-auto w-full px-6 flex items-center justify-between">
-          <Link href="/dashboard" className="font-bold text-zinc-900 text-lg tracking-tight">
+          <Link href="/dashboard" className="font-bold text-foreground text-lg tracking-tight">
             Wettfreunde
           </Link>
           <nav className="flex items-center gap-1">
@@ -102,8 +102,8 @@ export function NavBar({ unreadCount = 0 }: NavBarProps) {
                   className={cn(
                     'relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-zinc-900 text-white'
-                      : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                   )}
                 >
                   <Icon className="w-4 h-4" />
@@ -122,7 +122,7 @@ export function NavBar({ unreadCount = 0 }: NavBarProps) {
       </header>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-t border-zinc-200">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-t border-border">
         <div className="flex items-center justify-around px-1 py-3">
           {navItems.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
@@ -133,7 +133,7 @@ export function NavBar({ unreadCount = 0 }: NavBarProps) {
                 aria-label={label}
                 className={cn(
                   'relative flex items-center justify-center w-10 h-10 rounded-xl transition-colors',
-                  isActive ? 'text-zinc-900 bg-zinc-100' : 'text-zinc-400 hover:text-zinc-600'
+                  isActive ? 'text-foreground bg-accent' : 'text-muted-foreground hover:text-accent-foreground'
                 )}
               >
                 <Icon className="w-5 h-5" />
