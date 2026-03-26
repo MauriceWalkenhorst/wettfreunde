@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { LanguageToggle } from '@/components/language-toggle'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 function HomeIcon({ className }: { className?: string }) {
   return (
@@ -116,10 +117,16 @@ export function NavBar({ unreadCount = 0 }: NavBarProps) {
                 </Link>
               )
             })}
+            <ThemeToggle />
             <LanguageToggle />
           </nav>
         </div>
       </header>
+
+      {/* Mobile theme toggle — fixed top right */}
+      <div className="md:hidden fixed top-3 right-3 z-50">
+        <ThemeToggle />
+      </div>
 
       {/* Mobile bottom nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-t border-border">
