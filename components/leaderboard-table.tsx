@@ -22,7 +22,7 @@ export function LeaderboardTable({ profiles, currentUserId }: LeaderboardTablePr
           <div
             key={profile.id}
             className={`flex items-center gap-3 rounded-2xl border p-3.5 transition-colors ${
-              isMe ? 'bg-zinc-900 border-zinc-900 text-white' : 'bg-white border-zinc-200'
+              isMe ? 'bg-primary border-primary text-primary-foreground' : 'bg-card border-border'
             }`}
           >
             <div className="w-8 text-center text-lg font-bold">
@@ -32,17 +32,17 @@ export function LeaderboardTable({ profiles, currentUserId }: LeaderboardTablePr
               src={profile.avatar_url}
               name={profile.display_name}
               size="md"
-              className={isMe ? 'ring-2 ring-white/30' : ''}
+              className={isMe ? 'ring-2 ring-primary-foreground/30' : ''}
             />
             <div className="flex-1 min-w-0">
-              <p className={`font-semibold truncate ${isMe ? 'text-white' : 'text-zinc-900'}`}>
+              <p className={`font-semibold truncate ${isMe ? 'text-primary-foreground' : 'text-card-foreground'}`}>
                 {profile.display_name}
                 {isMe && ` ${t('you')}`}
               </p>
             </div>
-            <div className={`font-bold text-lg tabular-nums ${isMe ? 'text-white' : 'text-zinc-900'}`}>
+            <div className={`font-bold text-lg tabular-nums ${isMe ? 'text-primary-foreground' : 'text-card-foreground'}`}>
               {profile.points}
-              <span className={`text-xs font-normal ml-1 ${isMe ? 'text-white/60' : 'text-zinc-500'}`}>{t('pts')}</span>
+              <span className={`text-xs font-normal ml-1 ${isMe ? 'text-primary-foreground/60' : 'text-muted-foreground'}`}>{t('pts')}</span>
             </div>
           </div>
         )

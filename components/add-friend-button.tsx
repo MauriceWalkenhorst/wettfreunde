@@ -17,11 +17,11 @@ export function AddFriendButton({ userId, status }: AddFriendButtonProps) {
   const [error, setError] = useState<string | null>(null)
 
   if (status === 'accepted' || done) {
-    return <span className="text-xs text-zinc-400 font-medium">{t('friendStatus')}</span>
+    return <span className="text-xs text-muted-foreground font-medium">{t('friendStatus')}</span>
   }
 
   if (status === 'pending') {
-    return <span className="text-xs text-zinc-400 font-medium italic">{t('pending')}</span>
+    return <span className="text-xs text-muted-foreground font-medium italic">{t('pending')}</span>
   }
 
   async function handleAdd() {

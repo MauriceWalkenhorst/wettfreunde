@@ -18,7 +18,7 @@ export function FriendPicker({ friends, selected, onToggle, label, singleSelect 
 
   if (friends.length === 0) {
     return (
-      <div className="text-sm text-zinc-500 py-4 text-center">
+      <div className="text-sm text-muted-foreground py-4 text-center">
         {t('noFriends')}
       </div>
     )
@@ -26,7 +26,7 @@ export function FriendPicker({ friends, selected, onToggle, label, singleSelect 
 
   return (
     <div className="space-y-1.5">
-      {label && <p className="text-sm font-medium text-zinc-700">{label}</p>}
+      {label && <p className="text-sm font-medium text-foreground">{label}</p>}
       <div className="space-y-1">
         {friends.map((friend) => {
           const isSelected = selected.includes(friend.id)
@@ -44,15 +44,15 @@ export function FriendPicker({ friends, selected, onToggle, label, singleSelect 
               className={cn(
                 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all text-left',
                 isSelected
-                  ? 'border-zinc-900 bg-zinc-50'
-                  : 'border-zinc-200 bg-white hover:border-zinc-300'
+                  ? 'border-primary bg-accent'
+                  : 'border-border bg-card hover:border-border/60'
               )}
             >
               <Avatar src={friend.avatar_url} name={friend.display_name} size="sm" />
-              <span className="flex-1 text-sm font-medium text-zinc-900">{friend.display_name}</span>
+              <span className="flex-1 text-sm font-medium text-foreground">{friend.display_name}</span>
               <div className={cn(
                 'w-4 h-4 rounded-full border-2 transition-colors flex items-center justify-center',
-                isSelected ? 'border-zinc-900 bg-zinc-900' : 'border-zinc-300'
+                isSelected ? 'border-primary bg-primary' : 'border-border'
               )}>
                 {isSelected && (
                   <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">

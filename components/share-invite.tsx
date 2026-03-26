@@ -43,10 +43,10 @@ export function ShareInvite() {
   }
 
   return (
-    <div className="bg-zinc-50 rounded-2xl border border-zinc-200 p-5 space-y-3">
+    <div className="bg-card rounded-2xl border border-border p-5 space-y-3">
       <div>
-        <h3 className="font-semibold text-zinc-900">{t('title')}</h3>
-        <p className="text-sm text-zinc-500 mt-0.5">{t('subtitle')}</p>
+        <h3 className="font-semibold text-card-foreground">{t('title')}</h3>
+        <p className="text-sm text-muted-foreground mt-0.5">{t('subtitle')}</p>
       </div>
 
       {link ? (
@@ -55,7 +55,7 @@ export function ShareInvite() {
             <input
               readOnly
               value={link}
-              className="flex-1 text-xs bg-white border border-zinc-200 rounded-xl px-3 py-2 text-zinc-700 focus:outline-none"
+              className="flex-1 text-xs bg-background border border-border rounded-xl px-3 py-2 text-foreground focus:outline-none"
             />
             <Button size="sm" onClick={handleCopy} variant="secondary">
               {copied ? t('copied') : t('copy')}

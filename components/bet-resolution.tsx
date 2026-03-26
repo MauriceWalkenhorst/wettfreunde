@@ -83,12 +83,12 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
 
   if (celebrating) {
     return (
-      <div className="bg-white rounded-2xl border border-zinc-200 p-8 text-center space-y-3">
+      <div className="bg-card rounded-2xl border border-border p-8 text-center space-y-3">
         <div className="text-5xl">🎉</div>
-        <h2 className="text-lg font-bold text-zinc-900">{t('celebrationTitle')}</h2>
-        <p className="text-sm text-zinc-500">{t('celebrationBody')}</p>
+        <h2 className="text-lg font-bold text-card-foreground">{t('celebrationTitle')}</h2>
+        <p className="text-sm text-muted-foreground">{t('celebrationBody')}</p>
         <div className="flex justify-center pt-2">
-          <div className="w-5 h-5 border-2 border-zinc-300 border-t-zinc-900 rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-border border-t-foreground rounded-full animate-spin" />
         </div>
       </div>
     )
@@ -96,8 +96,8 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
 
   if (isSubject) {
     return (
-      <div className="space-y-4 bg-amber-50 border border-amber-200 rounded-2xl p-5">
-        <p className="font-medium text-zinc-900">{t('subjectPrompt')}</p>
+      <div className="space-y-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 rounded-2xl p-5">
+        <p className="font-medium text-foreground">{t('subjectPrompt')}</p>
 
         <div className="grid grid-cols-2 gap-3">
           <button
@@ -105,27 +105,27 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
             onClick={() => setSelectedAnswer(true)}
             className={cn(
               'rounded-2xl border-2 p-5 text-center transition-all',
-              selectedAnswer === true ? 'border-green-500 bg-green-50' : 'border-zinc-200 bg-white hover:border-zinc-400'
+              selectedAnswer === true ? 'border-green-500 bg-green-50 dark:bg-green-950/20' : 'border-border bg-card hover:border-foreground/40'
             )}
           >
             <div className="text-3xl mb-2">✅</div>
-            <div className="font-semibold text-zinc-900">{t('yes')}</div>
+            <div className="font-semibold text-foreground">{t('yes')}</div>
           </button>
           <button
             type="button"
             onClick={() => setSelectedAnswer(false)}
             className={cn(
               'rounded-2xl border-2 p-5 text-center transition-all',
-              selectedAnswer === false ? 'border-red-500 bg-red-50' : 'border-zinc-200 bg-white hover:border-zinc-400'
+              selectedAnswer === false ? 'border-red-500 bg-red-50 dark:bg-red-950/20' : 'border-border bg-card hover:border-foreground/40'
             )}
           >
             <div className="text-3xl mb-2">❌</div>
-            <div className="font-semibold text-zinc-900">{t('no')}</div>
+            <div className="font-semibold text-foreground">{t('no')}</div>
           </button>
         </div>
 
         <div className="space-y-2">
-          <p className="text-sm text-zinc-600">{t('photoLabel')}</p>
+          <p className="text-sm text-muted-foreground">{t('photoLabel')}</p>
           <input
             ref={fileRef}
             type="file"
@@ -150,7 +150,7 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
-              className="w-full rounded-xl border-2 border-dashed border-zinc-300 py-6 text-sm text-zinc-500 hover:border-zinc-400 transition-colors text-center"
+              className="w-full rounded-xl border-2 border-dashed border-border py-6 text-sm text-muted-foreground hover:border-foreground/40 transition-colors text-center"
             >
               {t('photoButton')}
             </button>
@@ -166,7 +166,7 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
           type="button"
           onClick={handleDecline}
           disabled={loading}
-          className="w-full text-center text-xs text-zinc-400 hover:text-red-500 transition-colors py-1"
+          className="w-full text-center text-xs text-muted-foreground hover:text-red-500 transition-colors py-1"
         >
           {t('declineButton')}
         </button>
@@ -176,8 +176,8 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
 
   if (myParticipation && myParticipation.side === null) {
     return (
-      <div className="space-y-4 bg-blue-50 border border-blue-200 rounded-2xl p-5">
-        <p className="font-medium text-zinc-900">{t('pickSidePrompt')}</p>
+      <div className="space-y-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/40 rounded-2xl p-5">
+        <p className="font-medium text-foreground">{t('pickSidePrompt')}</p>
 
         <div className="grid grid-cols-2 gap-3">
           <button
@@ -185,22 +185,22 @@ export function BetResolution({ betId, isSubject, myParticipation }: BetResoluti
             onClick={() => setSelectedSide(true)}
             className={cn(
               'rounded-2xl border-2 p-5 text-center transition-all',
-              selectedSide === true ? 'border-green-500 bg-green-50' : 'border-zinc-200 bg-white hover:border-zinc-400'
+              selectedSide === true ? 'border-green-500 bg-green-50 dark:bg-green-950/20' : 'border-border bg-card hover:border-foreground/40'
             )}
           >
             <div className="text-3xl mb-2">✅</div>
-            <div className="font-semibold text-zinc-900">{t('yes')}</div>
+            <div className="font-semibold text-foreground">{t('yes')}</div>
           </button>
           <button
             type="button"
             onClick={() => setSelectedSide(false)}
             className={cn(
               'rounded-2xl border-2 p-5 text-center transition-all',
-              selectedSide === false ? 'border-red-500 bg-red-50' : 'border-zinc-200 bg-white hover:border-zinc-400'
+              selectedSide === false ? 'border-red-500 bg-red-50 dark:bg-red-950/20' : 'border-border bg-card hover:border-foreground/40'
             )}
           >
             <div className="text-3xl mb-2">❌</div>
-            <div className="font-semibold text-zinc-900">{t('no')}</div>
+            <div className="font-semibold text-foreground">{t('no')}</div>
           </button>
         </div>
 

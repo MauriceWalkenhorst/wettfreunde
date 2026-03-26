@@ -32,7 +32,7 @@ export function Dialog({ open, onClose, title, children, className }: DialogProp
       onClose={onClose}
     >
       <div className="p-6">
-        {title && <h2 className="text-lg font-semibold text-zinc-900 mb-4">{title}</h2>}
+        {title && <h2 className="text-lg font-semibold text-foreground mb-4">{title}</h2>}
         {children}
       </div>
     </dialog>

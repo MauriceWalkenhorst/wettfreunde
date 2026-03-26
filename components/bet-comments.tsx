@@ -53,11 +53,11 @@ export function BetComments({ betId, comments: initialComments, currentUserId }:
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-zinc-200 p-5 space-y-4">
-      <h3 className="text-sm font-semibold text-zinc-700 uppercase tracking-wide">{t('title')}</h3>
+    <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">{t('title')}</h3>
 
       {comments.length === 0 ? (
-        <p className="text-sm text-zinc-400">{t('empty')}</p>
+        <p className="text-sm text-muted-foreground">{t('empty')}</p>
       ) : (
         <div className="space-y-3">
           {comments.map((comment) => (
@@ -69,20 +69,20 @@ export function BetComments({ betId, comments: initialComments, currentUserId }:
               />
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-xs font-semibold text-zinc-900">
+                  <span className="text-xs font-semibold text-card-foreground">
                     {comment.commenter.display_name}
                   </span>
-                  <span className="text-xs text-zinc-400">
+                  <span className="text-xs text-muted-foreground">
                     {formatRelativeTime(comment.created_at, locale)}
                   </span>
                 </div>
-                <p className="text-sm text-zinc-700 mt-0.5 break-words">{comment.body}</p>
+                <p className="text-sm text-foreground mt-0.5 break-words">{comment.body}</p>
               </div>
               {comment.user_id === currentUserId && (
                 <button
                   type="button"
                   onClick={() => handleDelete(comment.id)}
-                  className="text-xs text-zinc-300 hover:text-red-400 transition-colors flex-shrink-0 mt-0.5"
+                  className="text-xs text-muted-foreground/50 hover:text-red-400 transition-colors flex-shrink-0 mt-0.5"
                   aria-label={t('deleteOwn')}
                 >
                   ×
@@ -101,13 +101,13 @@ export function BetComments({ betId, comments: initialComments, currentUserId }:
           placeholder={t('placeholder')}
           maxLength={280}
           rows={1}
-          className="flex-1 resize-none rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent"
+          className="flex-1 resize-none rounded-xl border border-border px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
         />
         <button
           type="button"
           onClick={handleSend}
           disabled={!body.trim() || sending}
-          className="px-3 py-2 rounded-xl bg-zinc-900 text-white text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-zinc-700 transition-colors flex-shrink-0"
+          className="px-3 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-primary/80 transition-colors flex-shrink-0"
         >
           {t('send')}
         </button>
