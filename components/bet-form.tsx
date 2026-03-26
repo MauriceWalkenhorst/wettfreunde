@@ -97,7 +97,7 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
     <div className="max-w-lg mx-auto space-y-6">
       {/* Progress */}
       <div className="space-y-1">
-        <p className="text-xs text-zinc-500 font-medium">
+        <p className="text-xs text-muted-foreground font-medium">
           {t('stepIndicator', { current: stepIndex + 1, total: steps.length, label: stepLabels[step] })}
         </p>
         <div className="flex gap-1.5">
@@ -106,7 +106,7 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
               key={s}
               className={cn(
                 'h-1 flex-1 rounded-full transition-colors',
-                i <= stepIndex ? 'bg-zinc-900' : 'bg-zinc-200'
+                i <= stepIndex ? 'bg-primary' : 'bg-muted'
               )}
             />
           ))}
@@ -116,8 +116,8 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
       {step === 'details' && (
         <div className="space-y-4">
           <div>
-            <h2 className="text-xl font-bold text-zinc-900">{t('detailsTitle')}</h2>
-            <p className="text-sm text-zinc-500 mt-1">{t('detailsSubtitle')}</p>
+            <h2 className="text-xl font-bold text-foreground">{t('detailsTitle')}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t('detailsSubtitle')}</p>
           </div>
           <Input
             label={t('questionLabel')}
@@ -133,19 +133,19 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
             onChange={(e) => setStake(e.target.value)}
           />
           <div className="space-y-1">
-            <label className="text-sm font-medium text-zinc-700">{t('expiryLabel')}</label>
+            <label className="text-sm font-medium text-foreground">{t('expiryLabel')}</label>
             <input
               type="date"
               min={tomorrowStr}
               value={expiresAt}
               onChange={(e) => setExpiresAt(e.target.value)}
-              className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent"
+              className="w-full rounded-xl border border-border px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
             />
             {expiresAt && (
               <button
                 type="button"
                 onClick={() => setExpiresAt('')}
-                className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t('noExpiry')}
               </button>
@@ -157,11 +157,11 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
       {step === 'subject' && (
         <div className="space-y-4">
           <div>
-            <h2 className="text-xl font-bold text-zinc-900">{t('subjectTitle')}</h2>
-            <p className="text-sm text-zinc-500 mt-1">{t('subjectSubtitle')}</p>
+            <h2 className="text-xl font-bold text-foreground">{t('subjectTitle')}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t('subjectSubtitle')}</p>
           </div>
           {otherUsers.length === 0 ? (
-            <div className="text-center py-8 text-sm text-zinc-500">
+            <div className="text-center py-8 text-sm text-muted-foreground">
               {t('noOtherUsers')}
             </div>
           ) : (
@@ -178,14 +178,14 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
       {step === 'participants' && (
         <div className="space-y-4">
           <div>
-            <h2 className="text-xl font-bold text-zinc-900">{t('participantsTitle')}</h2>
-            <p className="text-sm text-zinc-500 mt-1">{t('participantsSubtitle')}</p>
+            <h2 className="text-xl font-bold text-foreground">{t('participantsTitle')}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t('participantsSubtitle')}</p>
           </div>
 
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-zinc-900 bg-zinc-50">
+          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-primary bg-muted">
             <Avatar src={currentUser.avatar_url} name={currentUser.display_name} size="sm" />
-            <span className="flex-1 text-sm font-medium text-zinc-900">{currentUser.display_name} {t('you')}</span>
-            <div className="w-4 h-4 rounded-full bg-zinc-900 flex items-center justify-center">
+            <span className="flex-1 text-sm font-medium text-foreground">{currentUser.display_name} {t('you')}</span>
+            <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
               <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <polyline points="20,6 9,17 4,12"/>
               </svg>
@@ -193,7 +193,7 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
           </div>
 
           {participantCandidates.length === 0 ? (
-            <div className="text-center py-6 text-sm text-zinc-500">
+            <div className="text-center py-6 text-sm text-muted-foreground">
               {t('noParticipants')}
             </div>
           ) : (
@@ -209,13 +209,13 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
       {step === 'side' && (
         <div className="space-y-4">
           <div>
-            <h2 className="text-xl font-bold text-zinc-900">{t('sideTitle')}</h2>
-            <p className="text-sm text-zinc-500 mt-1">{t('sideSubtitle')}</p>
+            <h2 className="text-xl font-bold text-foreground">{t('sideTitle')}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t('sideSubtitle')}</p>
           </div>
 
-          <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-200">
-            <p className="text-sm text-zinc-500 mb-1">{t('questionFor', { name: selectedSubject?.display_name ?? '' })}</p>
-            <p className="font-medium text-zinc-900">{question}</p>
+          <div className="bg-muted rounded-xl p-4 border border-border">
+            <p className="text-sm text-muted-foreground mb-1">{t('questionFor', { name: selectedSubject?.display_name ?? '' })}</p>
+            <p className="font-medium text-foreground">{question}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -224,22 +224,22 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
               onClick={() => setCreatorSide(true)}
               className={cn(
                 'rounded-2xl border-2 p-6 text-center transition-all',
-                creatorSide === true ? 'border-green-500 bg-green-50' : 'border-zinc-200 hover:border-zinc-400'
+                creatorSide === true ? 'border-green-500 bg-green-50' : 'border-border hover:border-muted-foreground'
               )}
             >
               <div className="text-3xl mb-2">✅</div>
-              <div className="font-semibold text-zinc-900">{t('yes')}</div>
+              <div className="font-semibold text-foreground">{t('yes')}</div>
             </button>
             <button
               type="button"
               onClick={() => setCreatorSide(false)}
               className={cn(
                 'rounded-2xl border-2 p-6 text-center transition-all',
-                creatorSide === false ? 'border-red-500 bg-red-50' : 'border-zinc-200 hover:border-zinc-400'
+                creatorSide === false ? 'border-red-500 bg-red-50' : 'border-border hover:border-muted-foreground'
               )}
             >
               <div className="text-3xl mb-2">❌</div>
-              <div className="font-semibold text-zinc-900">{t('no')}</div>
+              <div className="font-semibold text-foreground">{t('no')}</div>
             </button>
           </div>
         </div>

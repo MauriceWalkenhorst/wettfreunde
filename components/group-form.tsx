@@ -50,9 +50,9 @@ export function GroupForm({ users }: GroupFormProps) {
       />
 
       <div className="space-y-3">
-        <p className="text-sm font-medium text-zinc-700">{t('addMembers')}</p>
+        <p className="text-sm font-medium text-foreground">{t('addMembers')}</p>
         {users.length === 0 ? (
-          <p className="text-sm text-zinc-500">{t('noUsersAvailable')}</p>
+          <p className="text-sm text-muted-foreground">{t('noUsersAvailable')}</p>
         ) : (
           <div className="space-y-2">
             {users.map((user) => {
@@ -64,13 +64,13 @@ export function GroupForm({ users }: GroupFormProps) {
                   onClick={() => toggleUser(user.id)}
                   className={cn(
                     'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-colors text-left',
-                    selected ? 'border-zinc-900 bg-zinc-50' : 'border-zinc-200 bg-white hover:border-zinc-400'
+                    selected ? 'border-primary bg-muted' : 'border-border bg-card hover:border-muted-foreground'
                   )}
                 >
                   <Avatar src={user.avatar_url} name={user.display_name} size="sm" />
-                  <span className="flex-1 text-sm font-medium text-zinc-900">{user.display_name}</span>
+                  <span className="flex-1 text-sm font-medium text-foreground">{user.display_name}</span>
                   {selected && (
-                    <div className="w-4 h-4 rounded-full bg-zinc-900 flex items-center justify-center">
+                    <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
                       <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                         <polyline points="20,6 9,17 4,12"/>
                       </svg>
