@@ -71,7 +71,7 @@ export function GroupForm({ users }: GroupFormProps) {
                   <span className="flex-1 text-sm font-medium text-foreground">{user.display_name}</span>
                   {selected && (
                     <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
-                      <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <svg className="w-2.5 h-2.5 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                         <polyline points="20,6 9,17 4,12"/>
                       </svg>
                     </div>

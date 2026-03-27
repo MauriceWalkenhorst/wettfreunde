@@ -139,7 +139,7 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
               min={tomorrowStr}
               value={expiresAt}
               onChange={(e) => setExpiresAt(e.target.value)}
-              className="w-full rounded-xl border border-border px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+              className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
             />
             {expiresAt && (
               <button
@@ -186,7 +186,7 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
             <Avatar src={currentUser.avatar_url} name={currentUser.display_name} size="sm" />
             <span className="flex-1 text-sm font-medium text-foreground">{currentUser.display_name} {t('you')}</span>
             <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
-              <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <svg className="w-2.5 h-2.5 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <polyline points="20,6 9,17 4,12"/>
               </svg>
             </div>
@@ -224,7 +224,7 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
               onClick={() => setCreatorSide(true)}
               className={cn(
                 'rounded-2xl border-2 p-6 text-center transition-all',
-                creatorSide === true ? 'border-green-500 bg-green-50' : 'border-border hover:border-muted-foreground'
+                creatorSide === true ? 'border-green-500 bg-green-50 dark:bg-green-950/20' : 'border-border hover:border-muted-foreground'
               )}
             >
               <div className="text-3xl mb-2">✅</div>
@@ -235,7 +235,7 @@ export function BetForm({ allUsers, currentUser }: BetFormProps) {
               onClick={() => setCreatorSide(false)}
               className={cn(
                 'rounded-2xl border-2 p-6 text-center transition-all',
-                creatorSide === false ? 'border-red-500 bg-red-50' : 'border-border hover:border-muted-foreground'
+                creatorSide === false ? 'border-red-500 bg-red-50 dark:bg-red-950/20' : 'border-border hover:border-muted-foreground'
               )}
             >
               <div className="text-3xl mb-2">❌</div>

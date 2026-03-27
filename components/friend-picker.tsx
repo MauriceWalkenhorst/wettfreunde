@@ -55,7 +55,7 @@ export function FriendPicker({ friends, selected, onToggle, label, singleSelect 
                 isSelected ? 'border-primary bg-primary' : 'border-border'
               )}>
                 {isSelected && (
-                  <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <svg className="w-2.5 h-2.5 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <polyline points="20,6 9,17 4,12"/>
                   </svg>
                 )}
