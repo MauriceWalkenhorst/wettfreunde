@@ -52,9 +52,8 @@ export async function getBetsForUser(): Promise<{
       .update({ status: 'expired' })
       .in('id', expiredIds)
     if (!expireError) {
-      for (const b of bets) {
-        if (expiredIds.includes(b.id)) b.status = 'expired'
-      }
+      const expiredSet = new Set(expiredIds)
+      bets.splice(0, bets.length, ...bets.map((b) => expiredSet.has(b.id) ? { ...b, status: 'expired' as const } : b))
     }
   }
 
@@ -84,5 +83,12 @@ export async function getBetById(id: string): Promise<BetWithDetails | null> {
     .single()
 
   if (!data) return null
-  return data as unknown as BetWithDetails
+  const bet = data as unknown as BetWithDetails
+
+  if (bet.status === 'pending' && bet.expires_at && bet.expires_at < new Date().toISOString()) {
+    await supabase.from('bets').update({ status: 'expired' }).eq('id', id)
+    return { ...bet, status: 'expired' }
+  }
+
+  return bet
 }

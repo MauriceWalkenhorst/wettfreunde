@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 const VALID_PHOTO_EXTS = ['jpg', 'jpeg', 'png', 'webp']
+const MAX_PHOTO_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
 
 interface CreateBetInput {
   question: string
@@ -17,7 +18,7 @@ interface CreateBetInput {
 export async function createBet(input: CreateBetInput) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
+  if (!user) throw new Error('Nicht angemeldet')
 
   const { data: bet, error: betError } = await supabase
     .from('bets')
@@ -82,7 +83,7 @@ export async function createBet(input: CreateBetInput) {
 export async function pickSide(betId: string, side: boolean) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
+  if (!user) throw new Error('Nicht angemeldet')
 
   const { error } = await supabase
     .from('bet_participants')
@@ -97,7 +98,7 @@ export async function pickSide(betId: string, side: boolean) {
 export async function answerBet(betId: string, answer: boolean, photoFile?: File) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
+  if (!user) throw new Error('Nicht angemeldet')
 
   const { data: bet } = await supabase
     .from('bets')
@@ -112,6 +113,8 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
   let proofPhotoPath: string | null = null
 
   if (photoFile) {
+    if (photoFile.size > MAX_PHOTO_SIZE_BYTES) throw new Error('Foto zu groß (max. 10 MB)')
+    if (!photoFile.type.startsWith('image/')) throw new Error('Nur Bilder sind erlaubt')
     const ext = photoFile.name.split('.').pop()?.toLowerCase()
     if (!ext || !VALID_PHOTO_EXTS.includes(ext)) throw new Error('Ungültiger Dateityp')
     const path = `${betId}/subject-${Date.now()}.${ext}`
@@ -132,7 +135,12 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
       proof_photo_path: proofPhotoPath,
     })
     .eq('id', betId)
-  if (updateError) throw new Error(updateError.message)
+  if (updateError) {
+    if (proofPhotoPath) {
+      await supabase.storage.from('proof-photos').remove([proofPhotoPath])
+    }
+    throw new Error(updateError.message)
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error: resolveError } = await (supabase as any).rpc('resolve_bet_participants', {
@@ -149,7 +157,7 @@ export async function answerBet(betId: string, answer: boolean, photoFile?: File
 export async function declineBet(betId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
+  if (!user) throw new Error('Nicht angemeldet')
 
   const { data: bet } = await supabase
     .from('bets')
@@ -157,9 +165,9 @@ export async function declineBet(betId: string) {
     .eq('id', betId)
     .single()
 
-  if (!bet) throw new Error('Bet not found')
-  if ((bet as { subject_id: string }).subject_id !== user.id) throw new Error('Not authorized')
-  if ((bet as { status: string }).status !== 'pending') throw new Error('Bet already resolved')
+  if (!bet) throw new Error('Wette nicht gefunden')
+  if ((bet as { subject_id: string }).subject_id !== user.id) throw new Error('Nicht autorisiert')
+  if ((bet as { status: string }).status !== 'pending') throw new Error('Wette wurde bereits beantwortet')
 
   await supabase.from('bets').update({ status: 'expired' }).eq('id', betId)
 
@@ -185,7 +193,7 @@ export async function declineBet(betId: string) {
 export async function deleteBet(betId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
+  if (!user) throw new Error('Nicht angemeldet')
 
   const { data: bet } = await supabase
     .from('bets')
@@ -205,8 +213,10 @@ export async function deleteBet(betId: string) {
 export async function uploadBetPhoto(betId: string, photoFile: File, caption?: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
+  if (!user) throw new Error('Nicht angemeldet')
 
+  if (photoFile.size > MAX_PHOTO_SIZE_BYTES) throw new Error('Foto zu groß (max. 10 MB)')
+  if (!photoFile.type.startsWith('image/')) throw new Error('Nur Bilder sind erlaubt')
   const ext = photoFile.name.split('.').pop()?.toLowerCase()
   if (!ext || !VALID_PHOTO_EXTS.includes(ext)) throw new Error('Ungültiger Dateityp')
   const path = `${betId}/proof-${user.id}-${Date.now()}.${ext}`
@@ -225,7 +235,10 @@ export async function uploadBetPhoto(betId: string, photoFile: File, caption?: s
     caption: caption ?? null,
   })
 
-  if (dbError) throw new Error(dbError.message)
+  if (dbError) {
+    await supabase.storage.from('proof-photos').remove([path])
+    throw new Error(dbError.message)
+  }
 
   revalidatePath(`/bets/${betId}`)
 }

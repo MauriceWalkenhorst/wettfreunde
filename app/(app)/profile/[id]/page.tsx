@@ -3,7 +3,7 @@ import { Avatar } from '@/components/ui/avatar'
 import { getPublicProfile, getProfileStats, getHeadToHead } from '@/lib/queries/profiles'
 import { getTranslations, getLocale } from 'next-intl/server'
 import { notFound, redirect } from 'next/navigation'
-import Link from 'next/link'
+import { BackButton } from '@/components/back-button'
 
 export default async function PublicProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -25,9 +25,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
   return (
     <div className="space-y-6 max-w-md mx-auto">
-      <Link href="javascript:history.back()" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-        ← {t('backButton')}
-      </Link>
+      <BackButton label={t('backButton')} />
 
       <div className="bg-card rounded-2xl border border-border p-6 space-y-4">
         <div className="flex items-center gap-4">

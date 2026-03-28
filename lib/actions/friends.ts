@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache'
 export async function createInviteLink(): Promise<{ token: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
+  if (!user) throw new Error('Nicht angemeldet')
 
   const { data, error } = await supabase
     .from('invite_links')
@@ -21,7 +21,7 @@ export async function createInviteLink(): Promise<{ token: string }> {
 export async function sendFriendRequest(targetUserId: string): Promise<{ success: boolean; message: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
+  if (!user) throw new Error('Nicht angemeldet')
   if (user.id === targetUserId) return { success: false, message: 'Du kannst dir nicht selbst eine Anfrage schicken.' }
 
   const [userA, userB] = [user.id, targetUserId].sort()
@@ -63,7 +63,7 @@ export async function sendFriendRequest(targetUserId: string): Promise<{ success
 export async function acceptInvite(token: string): Promise<{ success: boolean; message: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
+  if (!user) throw new Error('Nicht angemeldet')
 
   const { data: invite, error: inviteError } = await supabase
     .from('invite_links')
@@ -86,22 +86,22 @@ export async function acceptInvite(token: string): Promise<{ success: boolean; m
 
   if (existing?.status === 'accepted') return { success: false, message: 'Ihr seid bereits befreundet.' }
 
-  if (existing) {
-    await supabase.from('friendships').update({ status: 'accepted' }).eq('id', existing.id)
-  } else {
-    await supabase.from('friendships').insert({ user_a: userA, user_b: userB, status: 'accepted' })
-  }
-
   const { data: claimed, error: claimError } = await supabase
     .from('invite_links')
     .update({ used_by: user.id })
     .eq('id', invite.id)
-    .is('used_by', null)          // Only succeeds if not yet used
+    .is('used_by', null)
     .select('id')
     .single()
 
   if (claimError || !claimed) {
     return { success: false, message: 'Dieser Einladungslink wurde bereits verwendet.' }
+  }
+
+  if (existing) {
+    await supabase.from('friendships').update({ status: 'accepted' }).eq('id', existing.id)
+  } else {
+    await supabase.from('friendships').insert({ user_a: userA, user_b: userB, status: 'accepted' })
   }
 
   const { data: currentProfile } = await supabase
