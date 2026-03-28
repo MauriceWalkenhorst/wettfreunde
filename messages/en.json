@@ -171,6 +171,20 @@
     "you": "(You)",
     "pts": "Pts."
   },
+  "publicProfile": {
+    "points": "Points",
+    "won": "Won",
+    "winRate": "Win Rate",
+    "streak": "Streak 🔥",
+    "headToHead": "Head-to-Head",
+    "headToHeadVs": "vs. {name}",
+    "myWins": "Your Wins",
+    "theirWins": "{name}'s Wins",
+    "sharedBets": "{total, plural, one {# shared bet} other {# shared bets}}",
+    "noSharedBets": "No shared bets yet.",
+    "memberSince": "Member since",
+    "backButton": "Back"
+  },
   "addFriend": {
     "friendStatus": "Friends",
     "pending": "Request sent",

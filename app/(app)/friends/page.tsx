@@ -5,6 +5,7 @@ import { AddFriendButton } from '@/components/add-friend-button'
 import { getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export default async function FriendsPage() {
   const supabase = await createClient()
@@ -37,14 +38,14 @@ export default async function FriendsPage() {
         <section className="space-y-2">
           <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">{t('yourFriends')}</p>
           {friends.map((user) => (
-            <div key={user.id} className="flex items-center gap-3 bg-white rounded-2xl border border-zinc-200 p-3.5">
+            <Link key={user.id} href={`/profile/${user.id}`} className="flex items-center gap-3 bg-white rounded-2xl border border-zinc-200 p-3.5 hover:bg-zinc-50 transition-colors">
               <Avatar src={user.avatar_url} name={user.display_name} size="md" />
               <div className="flex-1">
                 <p className="font-medium text-zinc-900">{user.display_name}</p>
                 <p className="text-sm text-zinc-500">{user.points} {t('points')}</p>
               </div>
               <span className="text-xs text-zinc-400 font-medium">{t('friendStatus')}</span>
-            </div>
+            </Link>
           ))}
         </section>
       )}
