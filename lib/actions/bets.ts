@@ -52,17 +52,18 @@ export async function createBet(input: CreateBetInput) {
 
   const name = (creatorProfile as { display_name: string } | null)?.display_name ?? 'Jemand'
 
-  await supabase.from('notifications').insert({
+  const { error: notifSubjectError } = await supabase.from('notifications').insert({
     user_id: input.subjectId,
     type: 'bet_request',
     title: 'Neue Wette!',
     body: `${name} hat eine Wette über dich gestellt: "${input.question}"`,
     ref_id: bet.id,
   })
+  if (notifSubjectError) throw new Error('Benachrichtigung konnte nicht gesendet werden: ' + notifSubjectError.message)
 
   const others = allParticipants.filter((id) => id !== user.id && id !== input.subjectId)
   if (others.length > 0) {
-    await supabase.from('notifications').insert(
+    const { error: notifOthersError } = await supabase.from('notifications').insert(
       others.map((uid) => ({
         user_id: uid,
         type: 'bet_request' as const,
@@ -71,6 +72,7 @@ export async function createBet(input: CreateBetInput) {
         ref_id: bet.id,
       }))
     )
+    if (notifOthersError) throw new Error('Benachrichtigungen konnten nicht gesendet werden: ' + notifOthersError.message)
   }
 
   revalidatePath('/dashboard')

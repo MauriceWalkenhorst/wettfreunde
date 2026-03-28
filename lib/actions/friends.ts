@@ -38,7 +38,7 @@ export async function sendFriendRequest(targetUserId: string): Promise<{ success
 
   const { error } = await supabase
     .from('friendships')
-    .insert({ user_a: userA, user_b: userB, status: 'accepted' })
+    .insert({ user_a: userA, user_b: userB, status: 'pending' })
 
   if (error) throw error
 
@@ -50,14 +50,14 @@ export async function sendFriendRequest(targetUserId: string): Promise<{ success
 
   await supabase.from('notifications').insert({
     user_id: targetUserId,
-    type: 'friend_accepted',
-    title: 'Neuer Freund!',
-    body: `${(currentProfile as { display_name: string } | null)?.display_name ?? 'Jemand'} hat dich als Freund hinzugefügt.`,
+    type: 'friend_request',
+    title: 'Neue Freundschaftsanfrage!',
+    body: `${(currentProfile as { display_name: string } | null)?.display_name ?? 'Jemand'} möchte dich als Freund hinzufügen.`,
     ref_id: user.id,
   })
 
   revalidatePath('/friends')
-  return { success: true, message: 'Freund hinzugefügt!' }
+  return { success: true, message: 'Freundschaftsanfrage gesendet!' }
 }
 
 export async function acceptInvite(token: string): Promise<{ success: boolean; message: string }> {
