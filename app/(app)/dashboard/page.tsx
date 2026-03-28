@@ -29,7 +29,7 @@ export default async function DashboardPage() {
           <p className="text-sm text-zinc-500 mt-0.5">{t('subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
-          <NotificationBell notifications={notifications} />
+          <NotificationBell notifications={notifications} currentUserId={user.id} />
           <Link href="/bets/new">
             <Button size="sm">{t('newBet')}</Button>
           </Link>

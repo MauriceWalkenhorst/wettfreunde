@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { Profile } from '@/lib/supabase/types'
 import { Avatar } from '@/components/ui/avatar'
+import Link from 'next/link'
 
 interface LeaderboardTableProps {
   profiles: Profile[]
@@ -19,10 +20,11 @@ export function LeaderboardTable({ profiles, currentUserId }: LeaderboardTablePr
       {profiles.map((profile, index) => {
         const isMe = profile.id === currentUserId
         return (
-          <div
+          <Link
             key={profile.id}
-            className={`flex items-center gap-3 rounded-2xl border p-3.5 transition-colors ${
-              isMe ? 'bg-primary border-primary text-primary-foreground' : 'bg-card border-border'
+            href={isMe ? '/profile' : `/profile/${profile.id}`}
+            className={`flex items-center gap-3 rounded-2xl border p-3.5 transition-colors hover:opacity-90 ${
+              isMe ? 'bg-primary border-primary text-primary-foreground' : 'bg-card border-border hover:bg-accent'
             }`}
           >
             <div className="w-8 text-center text-lg font-bold">
@@ -44,7 +46,7 @@ export function LeaderboardTable({ profiles, currentUserId }: LeaderboardTablePr
               {profile.points}
               <span className={`text-xs font-normal ml-1 ${isMe ? 'text-primary-foreground/60' : 'text-muted-foreground'}`}>{t('pts')}</span>
             </div>
-          </div>
+          </Link>
         )
       })}
     </div>

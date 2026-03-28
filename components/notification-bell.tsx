@@ -1,26 +1,45 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Notification } from '@/lib/supabase/types'
 import { formatRelativeTime } from '@/lib/utils'
 import { markNotificationRead, markAllNotificationsRead } from '@/lib/actions/notifications'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 interface NotificationBellProps {
   notifications: Notification[]
+  currentUserId: string
 }
 
-export function NotificationBell({ notifications }: NotificationBellProps) {
+export function NotificationBell({ notifications: initialNotifications, currentUserId }: NotificationBellProps) {
+  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications)
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const t = useTranslations('notifications')
   const locale = useLocale()
   const unread = notifications.filter((n) => !n.read)
 
+  useEffect(() => {
+    const supabase = createClient()
+    const channel = supabase
+      .channel('notifications')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${currentUserId}` },
+        (payload) => {
+          setNotifications((prev) => [payload.new as Notification, ...prev])
+        }
+      )
+      .subscribe()
+    return () => { channel.unsubscribe(); supabase.removeChannel(channel) }
+  }, [currentUserId])
+
   async function handleNotificationClick(n: Notification) {
     if (!n.read) {
       await markNotificationRead(n.id)
+      setNotifications((prev) => prev.map((x) => x.id === n.id ? { ...x, read: true } : x))
     }
     setOpen(false)
     if (n.ref_id && (n.type === 'bet_request' || n.type === 'bet_result')) {
@@ -32,6 +51,7 @@ export function NotificationBell({ notifications }: NotificationBellProps) {
 
   async function handleMarkAll() {
     await markAllNotificationsRead()
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
   }
 
   return (
